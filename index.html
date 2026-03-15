@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platformized BI Events</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #F0F1F5; min-height: 100vh; color: #374151; }
+
+    .version-toggle-bar { display: flex; align-items: center; justify-content: center; gap: 0; padding: 20px 24px 0; }
+    .version-btn { padding: 10px 32px; font-size: 14px; font-weight: 600; cursor: pointer; border: 2px solid #2563EB; background: white; color: #2563EB; transition: all 0.25s ease; }
+    .version-btn:first-child { border-radius: 8px 0 0 8px; border-right: 1px solid #2563EB; }
+    .version-btn:last-child { border-radius: 0 8px 8px 0; border-left: 1px solid #2563EB; }
+    .version-btn.active { background: #2563EB; color: white; }
+
+    .version-content { position: absolute; width: 100%; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+    .version-content.active { position: relative; opacity: 1; pointer-events: auto; }
+    .version-wrapper { position: relative; }
+
+    .page-header { padding: 18px 48px; }
+    .page-header h1 { font-size: 20px; font-weight: 700; color: #111827; }
+    .page-header p { margin-top: 3px; font-size: 13px; color: #9CA3AF; }
+    .steps-container { margin: 20px 24px; }
+
+    .step-card { background: white; border-radius: 16px; margin-bottom: 10px; border: 1px solid #E5E7EB; overflow: hidden; }
+    .step-header { display: flex; align-items: center; justify-content: space-between; padding: 22px 28px; cursor: pointer; user-select: none; }
+    .step-title { font-size: 17px; font-weight: 700; color: #111827; margin: 0; }
+    .step-subtitle { font-size: 13px; color: #9CA3AF; margin: 4px 0 0; line-height: 1.4; }
+    .step-header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+    .chevron-circle { width: 30px; height: 30px; border-radius: 1000px; border: 1px solid #D6E6FE; display: flex; align-items: center; justify-content: center; transition: transform 0.25s ease; flex-shrink: 0; background: white; }
+    .chevron-circle.open { transform: rotate(180deg); }
+
+    .step-body { border-top: 1px solid #E5E7EB; padding: 28px; display: none; transition: opacity 0.3s ease; }
+    .step-body.open { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .btn-blue { background: #2563EB; color: white; border: none; border-radius: 24px; padding: 12px 28px; font-size: 14px; font-weight: 600; cursor: default; pointer-events: none; }
+    .btn-blue.clickable { cursor: pointer; pointer-events: auto; transition: opacity 0.2s ease; }
+    .btn-blue.clickable:hover { opacity: 0.85; }
+    .btn-outline { background: transparent; color: #2563EB; border: 1.5px solid #2563EB; border-radius: 24px; padding: 12px 28px; font-size: 14px; font-weight: 600; cursor: default; pointer-events: none; }
+    .btn-row { display: flex; justify-content: center; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+    .btn-confirm { background: #116DFF; color: white; border: none; border-radius: 100px; padding: 6px 24px; font-size: 16px; font-weight: 500; cursor: default; pointer-events: none; line-height: 24px; }
+
+    .badge-green { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 500; color: white; background: #16A34A; }
+    .badge-regen { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; padding: 6px 18px; height: 30px; border-radius: 1000px; font-weight: 500; color: #116DFF; background: white; border: 1px solid #D6E6FE; font-family: inherit; }
+
+    .spinner { width: 32px; height: 32px; border: 3px solid #E0E7FF; border-top-color: #2563EB; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loader-text { font-size: 13px; color: #2563EB; font-weight: 500; }
+
+    /* ─── V2 Forms ─── */
+    .section-title { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 16px; }
+    .section-divider { border: none; border-top: 1px solid #E5E7EB; margin: 24px 0; }
+    .form-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+    .form-field { flex: 1; min-width: 140px; }
+    .form-label { display: flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+    .info-icon { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid #2563EB; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; color: #2563EB; font-weight: 700; font-style: normal; }
+    .select-field { width: 100%; padding: 10px 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px; color: #9CA3AF; background: white; appearance: auto; }
+    .textarea-field { width: 100%; padding: 14px 16px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px; color: #9CA3AF; min-height: 80px; resize: vertical; font-family: inherit; line-height: 1.5; }
+    .radio-option { display: flex; align-items: flex-start; gap: 12px; padding: 4px 0; }
+    .radio-circle { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #D1D5DB; flex-shrink: 0; margin-top: 2px; position: relative; }
+    .radio-circle.selected { border-color: #2563EB; }
+    .radio-circle.selected::after { content: ''; position: absolute; top: 4px; left: 4px; width: 8px; height: 8px; border-radius: 50%; background: #2563EB; }
+    .radio-label { font-size: 14px; font-weight: 600; color: #111827; }
+    .radio-sublabel { font-size: 13px; color: #6B7280; margin-top: 2px; }
+    .radio-disabled .radio-label { color: #C8C8C8; }
+    .radio-disabled .radio-sublabel { color: #D4D4D4; }
+    .upload-zone { width: 300px; height: 170px; border-radius: 12px; border: 2px dashed #C7D2FE; background: #EEF2FF; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; }
+    .upload-zone .plus { font-size: 28px; color: #818CF8; font-weight: 300; }
+    .upload-zone .formats { font-size: 12px; color: #6B7280; }
+
+    /* Key interaction rows */
+    .ki-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .ki-input { flex: 0 0 200px; padding: 3px 6px 3px 12px; height: 24px; border: 1px solid #D6E6FE; border-radius: 6px; background: white; font-size: 16px; color: #000624; font-family: inherit; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; outline: none; }
+    .ki-dropdown { display: flex; align-items: center; justify-content: space-between; width: 226px; height: 24px; padding: 3px 6px 3px 9px; border: 1px solid #D6E6FE; border-radius: 6px; background: white; font-size: 12px; color: #000624; font-family: inherit; }
+    .ki-dropdown-arrow { font-size: 10px; color: #000624; margin-left: 6px; }
+    .ki-delete-btn { width: 24px; height: 24px; border-radius: 1000px; border: 1px solid #D6E6FE; background: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ki-delete-btn svg { width: 18px; height: 18px; }
+    .ki-label { font-size: 15px; font-weight: 600; color: #374151; margin-bottom: 12px; }
+    .add-key { color: #2563EB; font-size: 13px; font-weight: 600; margin-top: 10px; }
+
+    /* Screenshot blocks V2 */
+    .screenshot-block { margin-bottom: 36px; }
+    .screenshot-side { display: flex; gap: 28px; flex-wrap: wrap; }
+    .screenshot-img-v2 { width: 380px; height: 280px; background: #E8EAF0; border-radius: 8px; border: 1px solid #E5E7EB; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .fake-ui { width: 92%; height: 90%; background: #D1D5DB; border-radius: 4px; display: flex; flex-direction: column; padding: 12px; gap: 6px; }
+    .fake-ui div { border-radius: 2px; }
+    .screenshot-right { flex: 1; min-width: 260px; }
+    .screenshot-label { font-size: 17px; font-weight: 700; color: #111827; margin-bottom: 14px; }
+
+    /* Event cards V2 */
+    .event-card-v2 { border: 1px solid #A8CAFF; border-radius: 8px; padding: 20px; margin-bottom: 16px; background: white; box-shadow: 0 0 6px 0 rgba(0,6,36,0.1), 0 2px 4px 0 rgba(0,6,36,0.05); }
+    .related-bar { display: flex; align-items: center; gap: 6px; margin-bottom: 0; flex-wrap: wrap; padding-bottom: 12px; }
+    .related-bar .rlabel { font-size: 14px; font-weight: 700; color: #000624; margin-right: 6px; }
+    .related-tag { font-size: 12px; padding: 0 9px; height: 18px; display: inline-flex; align-items: center; border-radius: 100px; background: #D6E6FE; color: #333853; font-weight: 400; white-space: nowrap; }
+    .event-divider { height: 1px; background: #DFE5EB; margin-bottom: 12px; }
+    .event-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+    .event-title-left { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .event-title-badge-row { display: flex; align-items: center; gap: 6px; }
+    .event-id-badge { display: inline-flex; align-items: center; justify-content: center; padding: 3px 12px; height: 24px; border: 1px solid #A8CAFF; border-radius: 2px; font-size: 14px; color: #116DFF; font-weight: 500; background: white; }
+    .event-title-divider { width: 1px; height: 24px; background: #CFD1DC; }
+    .event-name-v2 { font-size: 18px; font-weight: 700; color: #000624; }
+    .event-desc { font-size: 14px; color: #333853; margin: 0; line-height: 1.4; }
+    .event-usertype { font-size: 14px; color: #44485F; margin: 0; }
+    .event-usertype .ut-label { color: #868AA5; }
+    .event-fields-label { font-size: 14px; color: #868AA5; margin: 0; }
+    .three-dots { width: 24px; height: 24px; border-radius: 1000px; border: 1px solid #D6E6FE; display: inline-flex; align-items: center; justify-content: center; color: #116DFF; background: white; flex-shrink: 0; font-size: 16px; }
+    .see-more { color: #116DFF; font-size: 14px; font-weight: 500; text-align: center; margin-top: 10px; }
+    .v2-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 0; }
+    .v2-table th { text-align: left; padding: 12px 18px; font-weight: 400; font-size: 14px; color: #000624; background: #F6F7F9; border-top: 1px solid #DFE5EB; border-bottom: 1px solid #DFE5EB; }
+    .v2-table td { padding: 12px 18px; font-size: 14px; color: #333853; font-weight: 400; border-bottom: 1px solid #DFE5EB; }
+
+    /* Step 5 V2 */
+    .screenshot-container-v2 { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 0 6px 0 rgba(0,6,36,0.1), 0 2px 4px 0 rgba(0,6,36,0.05); }
+    .screenshot-header-v2 { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; }
+    .screenshot-header-v2 span { font-size: 18px; font-weight: 700; color: #000624; }
+    .screenshot-header-divider { height: 1px; background: #DFE5EB; }
+    .mountain-placeholder { width: 100%; height: 240px; border-radius: 8px; overflow: hidden; background: #E4ECF7; }
+    .mountain-placeholder img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block; }
+    .screenshot-img-area { padding: 0 24px 24px 24px; margin-top: 24px; }
+    .accordion-row-v2 { display: flex; align-items: center; gap: 6px; padding: 12px 24px; border-top: 1px solid #DFE5EB; font-size: 16px; font-weight: 500; color: #000624; }
+    .accordion-row-v2 .arrow-right { width: 0; height: 0; border-left: 7px solid #000624; border-top: 5px solid transparent; border-bottom: 5px solid transparent; margin-right: 12px; flex-shrink: 0; }
+    .accordion-row-v2 .arrow-down { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid #000624; margin-right: 12px; flex-shrink: 0; }
+    .accordion-row-v2 .vert-div { width: 1px; height: 18px; background: #ACAFC4; margin: 0 12px; flex-shrink: 0; }
+    .badge-existing { font-size: 12px; padding: 0 6px; height: 18px; display: inline-flex; align-items: center; border-radius: 2px; background: #ECEFF3; color: #44485F; font-weight: 500; margin-left: 4px; }
+    .badge-new { font-size: 12px; padding: 0 6px; height: 18px; display: inline-flex; align-items: center; border-radius: 2px; background: #D6E6FE; color: #44485F; font-weight: 500; margin-left: 4px; }
+    .accordion-expanded-v2 { background: #F4F7FF; padding: 15px 18px 12px; }
+    .v2-table-inner { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .v2-table-inner th { text-align: left; padding: 12px 18px; font-weight: 400; font-size: 14px; color: #000624; background: #F6F7F9; border-top: 1px solid #DFE5EB; border-bottom: 1px solid #DFE5EB; }
+    .v2-table-inner td { padding: 12px 18px; font-size: 14px; color: #333853; font-weight: 400; border-bottom: 1px solid #DFE5EB; vertical-align: top; background: white; }
+    .value-textarea { padding: 6px 12px; border: 1px solid #D6E6FE; border-radius: 6px; font-size: 14px; color: #000624; min-height: 48px; width: 174px; font-family: inherit; line-height: 18px; background: white; display: block; word-wrap: break-word; white-space: normal; }
+    .dyn-checkbox-v2 { width: 16px; height: 16px; border: 1px solid #116DFF; border-radius: 4px; display: inline-block; background: white; }
+
+    /* ─── V1 specific ─── */
+    .toolbar { display: flex; align-items: center; gap: 2px; padding: 6px 8px; background: #FAFAFA; border-bottom: 1px solid #E5E7EB; border-radius: 6px 6px 0 0; flex-wrap: wrap; font-size: 13px; }
+    .toolbar button { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; background: none; border: none; border-radius: 3px; cursor: pointer; color: #6B7280; font-size: 13px; font-family: inherit; }
+    .toolbar .sep { width: 1px; height: 18px; background: #D1D5DB; margin: 0 4px; }
+    .toolbar select { font-size: 12px; border: 1px solid #D1D5DB; border-radius: 4px; padding: 2px 4px; color: #374151; background: white; outline: none; }
+    .toolbar .spacer { flex: 1; }
+    .rich-area { border: 1px solid #E5E7EB; border-top: none; border-radius: 0 0 6px 6px; padding: 14px; font-size: 13px; color: #374151; line-height: 1.7; }
+    .label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+    .bold { font-weight: 700; } .semibold { font-weight: 600; } .gray-text { color: #9CA3AF; }
+    .event-name { color: #4338CA; text-decoration: underline; }
+    .fields-label { font-size: 12px; font-weight: 600; margin: 6px 0 4px; }
+    .img-placeholder { width: 160px; height: 110px; border-radius: 4px; border: 1px solid #C7D2FE; background-color: #E0E7FF; background-image: linear-gradient(45deg,#EEF2FF 25%,transparent 25%),linear-gradient(-45deg,#EEF2FF 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#EEF2FF 75%),linear-gradient(-45deg,transparent 75%,#EEF2FF 75%); background-size: 12px 12px; background-position: 0 0,0 6px,6px -6px,-6px 0; display: flex; align-items: center; justify-content: center; }
+    .screenshot-thumb { width: 160px; flex-shrink: 0; }
+    .screenshot-card { background: #F3F4F6; border-radius: 6px; overflow: hidden; border: 1px solid #E5E7EB; }
+    .screenshot-img { height: 110px; background: #E8EAF0; display: flex; align-items: center; justify-content: center; }
+    .screenshot-fake { width:80%;height:80%;background:#D1D5DB;border-radius:4px;display:flex;flex-direction:column;padding:6px;gap:3px; }
+    .screenshot-info { padding: 6px 8px; } .screenshot-info p { font-size: 10px; color: #6B7280; margin: 0; } .screenshot-info .sub { font-size: 9px; color: #9CA3AF; margin-top: 1px; }
+    .side-layout { display: flex; gap: 16px; flex-wrap: wrap; } .side-content { flex: 1; min-width: 260px; }
+    .upload-area { margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:20px; }
+    .event-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+    .event-table th { text-align: left; padding: 10px 12px; font-weight: 600; font-size: 12px; color: #6B7280; border-bottom: 1px solid #E5E7EB; background: #F9FAFB; }
+    .event-table td { padding: 10px 12px; font-size: 13px; color: #374151; border-bottom: 1px solid #F3F4F6; }
+  </style>
+</head>
+<body>
+
+  <div class="version-toggle-bar">
+    <button class="version-btn active" onclick="switchVersion('v1', this)">V1 — POC by Dev</button>
+    <button class="version-btn" onclick="switchVersion('v2', this)">V2 — Improved</button>
+  </div>
+
+  <div class="page-header"><h1>Platformized BI Events</h1><p>Get started with platformized BI events.</p></div>
+
+  <div class="version-wrapper">
+
+  <!-- ═══ V1 ═══ -->
+  <div class="version-content active" id="v1-content"><div class="steps-container">
+
+    <!-- V1 S1 -->
+    <div class="step-card"><div class="step-header" onclick="toggle('v1',1)"><div><h3 class="step-title">Step 1: Context & Screenshots</h3><p class="step-subtitle">Provide business context and upload screenshots</p></div><div class="step-header-right"><div class="chevron-circle open" id="v1-chev-1"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+    <div class="step-body open" id="v1-body-1">
+      <span class="label">Business Context *</span>
+      <div class="toolbar"><button>↩</button><button>↪</button><div class="sep"></div><button><b>B</b></button><button><i>I</i></button><button><u>U</u></button><button><s>S</s></button><div class="sep"></div><button>&lt;&gt;</button><div class="sep"></div><button>☰</button><button>≡</button><button>⋮≡</button><div class="sep"></div><select><option>Paragraph</option></select><div class="spacer"></div><button>⎘</button><button>⊞</button><button>↻</button></div>
+      <div class="rich-area" style="line-height:1.8"><p>Src</p><p style="margin-bottom:12px">xxx</p><p class="bold" style="margin-bottom:2px">Company name</p><p class="gray-text" style="margin-bottom:12px">Add your company name</p><p class="bold" style="margin-bottom:2px">Product Domain</p><p class="gray-text">Add the product domain that you want to generate business questions for. The full list is available here: <a href="#" style="color:#4338CA">https://engineeringladder.#CompanyProductDomain</a></p><p class="bold" style="margin-top:12px;margin-bottom:2px">Description</p><p class="gray-text">Add a detailed description of the business scenario. Provide as much detail as possible, so LLM will have the expected context</p></div>
+      <div class="upload-area"><div class="img-placeholder"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><line x1="14" y1="6" x2="14" y2="22" stroke="#818CF8" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="14" x2="22" y2="14" stroke="#818CF8" stroke-width="2" stroke-linecap="round"/></svg></div><p style="font-size:13px;color:#374151;margin-top:8px">Add images</p><p style="font-size:12px;color:#9CA3AF">Click to upload</p></div>
+      <div class="btn-row"><button class="btn-blue clickable" onclick="stepAction('v1',2)">Continue to Business Questions</button></div>
+    </div></div>
+
+    <!-- V1 S2 -->
+    <div class="step-card"><div class="step-header" onclick="toggle('v1',2)"><div><h3 class="step-title">Step 2: Business Questions and Key Interactions</h3><p class="step-subtitle">Review and edit generated business questions for each "left click" image</p></div><div class="step-header-right"><div class="chevron-circle" id="v1-chev-2"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+    <div class="step-body" id="v1-body-2">
+      <div class="side-layout"><div class="screenshot-thumb"><div class="screenshot-card"><div class="screenshot-img"><div class="screenshot-fake"><div style="width:60%;height:4px;background:#A0A8B8"></div><div style="width:90%;height:3px;background:#B8BFC9"></div><div style="width:75%;height:3px;background:#B8BFC9"></div><div style="width:85%;height:3px;background:#B8BFC9"></div></div></div><div class="screenshot-info"><p>Screenshot 2025-01-31 at 11.32.27.png</p><p class="sub">v1.0_IIS</p></div></div></div>
+      <div class="side-content"><p style="font-size:12px;color:#6B7280;margin-bottom:6px">Business Questions were generated for "Screenshot 2025 07 31 at 11.0.27.png" *</p><div class="toolbar"><button>↩</button><button>↪</button><div class="sep"></div><button><b>B</b></button><button><i>I</i></button><button><u>U</u></button><button><s>S</s></button><div class="sep"></div><button>&lt;&gt;</button><div class="sep"></div><button>☰</button><button>≡</button><button>⋮≡</button><div class="sep"></div><select><option>Paragraph</option></select><div class="spacer"></div><button>⎘</button><button>⊞</button><button>↻</button></div>
+      <div class="rich-area"><p style="margin-bottom:3px">• <strong>Run Query:</strong> Click Button to execute the SQL query</p><p style="margin-bottom:3px">• <strong>Edit Query:</strong> Perry (Text input area for SQL script)</p><p style="margin-bottom:3px">• <strong>View Results:</strong> Click Button to view the results of the query</p><p style="margin-bottom:3px">• <strong>Select Data Source:</strong> Click dropdown to change data source</p><p style="margin-bottom:14px">• <strong>Access Help:</strong> Click Help icon for documentation</p><p class="bold" style="margin-bottom:6px">Business Questions</p><p class="semibold" style="margin-bottom:4px">Engagement</p><p style="padding-left:10px;margin-bottom:10px">• What is the average session duration for users who run API calls in the last 69 days? [KPI: Session Duration]</p><p class="semibold" style="margin-bottom:4px">Conversion</p><p style="padding-left:10px;margin-bottom:10px">• What percentage of users successfully execute their API queries without errors? [KPI: Success Rate]</p><p class="semibold" style="margin-bottom:4px">Retention</p><p style="padding-left:10px;margin-bottom:10px">• Are users who frequently run API calls more likely to return within the next week? [KPI: Retention / Return Rate]</p><p class="semibold" style="margin-bottom:4px">Discoverability</p><p style="padding-left:10px">• How easily do users find and access the "Natural" from the main interface? [KPI: Discoverability]</p></div></div></div>
+      <div class="btn-row"><button class="btn-blue clickable" onclick="stepAction('v1',3)">Unify Business Questions</button></div>
+    </div></div>
+
+    <!-- V1 S3 -->
+    <div class="step-card"><div class="step-header" onclick="toggle('v1',3)"><div><h3 class="step-title">Step 3: Unified Business Questions and Key Interactions</h3><p class="step-subtitle">Review and edit the unified business questions before generating BI events</p></div><div class="step-header-right"><div class="chevron-circle" id="v1-chev-3"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+    <div class="step-body" id="v1-body-3">
+      <span class="label">Unified Business Questions *</span>
+      <div class="toolbar"><button>↩</button><button>↪</button><div class="sep"></div><button><b>B</b></button><button><i>I</i></button><button><u>U</u></button><button><s>S</s></button><div class="sep"></div><button>&lt;&gt;</button><div class="sep"></div><button>☰</button><button>≡</button><button>⋮≡</button><div class="sep"></div><select><option>Paragraph</option></select><div class="spacer"></div><button>⎘</button><button>⊞</button><button>↻</button></div>
+      <div class="rich-area"><p class="bold" style="margin-bottom:8px">Unified Business Questions</p><p style="margin-bottom:3px">• What is the average session duration for users who perform [action] in the last [timeframe]? (KPI: Session Duration)</p><p style="margin-bottom:3px">• What percentage of users successfully complete [action] without errors? (KPI: Success Rate)</p><p style="margin-bottom:3px">• Are users who frequently perform [action] more likely to return within the next [timeframe]? (KPI: Retention / Return Rate)</p><p style="margin-bottom:3px">• How easily do users find and access the "[feature]" from the main interface? (KPI: Discoverability)</p><p style="margin-bottom:14px">• What is the error rate when users attempt to perform [action]? (KPI: Error Rate / Failure Rate)</p><p class="bold" style="margin-bottom:8px">Unified Key Interactions</p><p style="margin-bottom:3px">• <strong>Run (action):</strong> Click [ButtonType] to execute in the [section]</p><p style="margin-bottom:3px">• <strong>Edit (action):</strong> Entry / Text input area for [section/Task]</p><p style="margin-bottom:3px">• <strong>View Results:</strong> Click [Button] to see results at the [section]</p><p style="margin-bottom:3px">• <strong>Select (dataType):</strong> Click [Dropdown] to choose [dataType]</p><p>• <strong>Access Help:</strong> Click [Help icon] for documentation</p></div>
+      <div class="btn-row"><button class="btn-blue clickable" onclick="stepAction('v1',4)">Generate Specific Events</button><button class="btn-outline">Generate Generic Events</button></div>
+    </div></div>
+
+    <!-- V1 S4 -->
+    <div class="step-card"><div class="step-header" onclick="toggle('v1',4)"><div><h3 class="step-title">Step 4: Suggested BI Events</h3><p class="step-subtitle">BI events review completed</p></div><div class="step-header-right"><span class="badge-green">SPECIFIC EVENTS</span><div class="chevron-circle" id="v1-chev-4"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+    <div class="step-body" id="v1-body-4">
+      <div class="toolbar"><button>↩</button><button>↪</button><div class="sep"></div><button><b>B</b></button><button><i>I</i></button><button><u>U</u></button><button><s>S</s></button><div class="sep"></div><button>&lt;&gt;</button><div class="sep"></div><button>☰</button><button>≡</button><button>⋮≡</button><div class="sep"></div><select><option>Paragraph</option></select><div class="spacer"></div><button>⎘</button><button>⊞</button><button>↻</button></div>
+      <div class="rich-area"><p class="bold" style="margin-bottom:14px;font-size:13px">Reused Events</p><div><p style="font-size:13px"><strong>Event Name:</strong> <span class="event-name">LoadFinished</span></p><p style="font-size:12px"><strong>Evid:</strong> 7.0.0</p><p style="font-size:12px"><strong>Description:</strong> Load finished</p><p style="font-size:12px;margin-bottom:6px"><strong>User Type:</strong> legacy_internal</p><p class="fields-label">Fields:</p><table class="event-table"><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td>duration</td><td>NUMERIC</td><td>duration</td></tr><tr><td>session_id</td><td>GUID</td><td>session_id</td></tr><tr><td>app_name</td><td>STRING</td><td>app_name</td></tr><tr><td>first_resp_est_duration</td><td>NUMERIC</td><td>first_resp_est_duration</td></tr></tbody></table></div><div style="margin-top:20px"><p style="font-size:13px"><strong>Event Name:</strong> <span class="event-name">interaction_finished</span></p><p style="font-size:12px"><strong>Evid:</strong> 2.0.0</p><p style="font-size:12px"><strong>Description:</strong> Interaction finished.</p><p style="font-size:12px;margin-bottom:6px"><strong>User Type:</strong> legacy_internal</p><p class="fields-label">Fields:</p><table class="event-table"><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td>duration</td><td>NUMERIC</td><td>duration</td></tr><tr><td>name</td><td>STRING</td><td>name</td></tr><tr><td>session_id</td><td>GUID</td><td>session_id</td></tr><tr><td>app_name</td><td>STRING</td><td>app_name</td></tr><tr><td>interaction_label</td><td>STRING</td><td>interaction_label</td></tr></tbody></table></div><div style="margin-top:20px"><p style="font-size:13px"><strong>Event Name:</strong> <span class="event-name">reading_action_click</span></p><p style="font-size:12px"><strong>Evid:</strong> 0.0.7</p><p style="font-size:12px"><strong>Description:</strong> Wording / action / text / actions</p><p style="font-size:12px;margin-bottom:6px"><strong>User Type:</strong> s-xxx</p><p class="fields-label">Fields:</p><table class="event-table"><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td>button_name</td><td>STRING</td><td>Action button app_text, reflect... results</td></tr><tr><td>action</td><td>STRING</td><td>Text input: 1, 2, 3</td></tr><tr><td>vertical</td><td>STRING</td><td>Where the product is area: from</td></tr><tr><td>type</td><td>STRING</td><td>Type of genre: doc, name, component, discover</td></tr></tbody></table></div></div>
+      <div class="btn-row"><button class="btn-blue clickable" onclick="stepAction('v1',5)">Split by Screens</button></div>
+    </div></div>
+
+    <!-- V1 S5 -->
+    <div class="step-card"><div class="step-header" onclick="toggle('v1',5)"><div><h3 class="step-title">Step 5: Review BI Events per Screenshot</h3><p class="step-subtitle">BI events per screenshot reviewed successfully</p></div><div class="step-header-right"><span class="badge-green">SPECIFIC EVENTS</span><div class="chevron-circle" id="v1-chev-5"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+    <div class="step-body" id="v1-body-5">
+      <div class="side-layout"><div class="screenshot-thumb"><div class="screenshot-card"><div class="screenshot-img" style="height:100px"><div class="screenshot-fake"><div style="width:60%;height:4px;background:#A0A8B8"></div><div style="width:90%;height:3px;background:#B8BFC9"></div><div style="width:75%;height:3px;background:#B8BFC9"></div></div></div><div class="screenshot-info"><p>Screenshot 2025-07-30 at 11.33.27.png</p></div></div></div>
+      <div class="side-content"><p style="font-size:12px;color:#6B7280;margin-bottom:6px">BI Events for "Screenshot 2025 07 31 at 11.0.27.png" *</p><div class="toolbar"><button>↩</button><button>↪</button><div class="sep"></div><button><b>B</b></button><button><i>I</i></button><button><u>U</u></button><button><s>S</s></button><div class="sep"></div><button>&lt;&gt;</button><div class="sep"></div><button>☰</button><button>≡</button><button>⋮≡</button><div class="sep"></div><select><option>Paragraph</option></select><div class="spacer"></div><button>⎘</button><button>⊞</button><button>↻</button></div>
+      <div class="rich-area"><p class="bold" style="margin-bottom:8px">Event Mapping Plan</p><p class="semibold" style="margin-bottom:4px">Analyzed UI Screenshot</p><p style="font-size:12px;color:#6B7280;margin-bottom:12px">The provided screenshot shows a user interface for executing API calls, with visible UI elements such as buttons, inputs, areas, and navigation options.</p><p class="semibold" style="margin-bottom:8px">Mapped BI Events</p><div><p style="font-size:13px"><strong>Event Name:</strong> <span class="event-name">LoadFinished</span></p><p style="font-size:12px"><strong>Evid:</strong> 7.0.0</p><p style="font-size:12px"><strong>Description:</strong> Load finished</p><p style="font-size:12px;margin-bottom:6px"><strong>User Type:</strong> legacy_internal</p><p class="fields-label">Fields:</p><table class="event-table"><thead><tr><th>Name</th><th>Type</th><th>Description</th><th>Example Value</th></tr></thead><tbody><tr><td>duration</td><td>NUMERIC</td><td>duration</td><td>72</td></tr><tr><td>session_id</td><td>GUID</td><td>session_id</td><td>c2345-abcde</td></tr></tbody></table></div></div></div></div>
+    </div></div>
+
+  </div></div>
+
+  <!-- ═══ V2 ═══ -->
+  <div class="version-content" id="v2-content"><div class="steps-container">
+
+    <!-- V2 S1 -->
+    <div class="step-card"><div class="step-header" onclick="toggle('v2',1)"><div><h3 class="step-title">Step 1: Context & Screenshots</h3><p class="step-subtitle">Provide business context and upload screenshots.</p></div><div class="step-header-right"><div class="chevron-circle open" id="v2-chev-1"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+    <div class="step-body open" id="v2-body-1">
+      <p class="section-title">Business context</p>
+      <div class="form-row"><div class="form-field"><div class="form-label">Src <span class="info-icon">i</span></div><select class="select-field"><option>Select</option></select></div><div class="form-field"><div class="form-label">Owner <span class="info-icon">i</span></div><select class="select-field"><option>Select</option></select></div><div class="form-field"><div class="form-label">Domain <span class="info-icon">i</span></div><select class="select-field"><option>Select</option></select></div><div class="form-field"><div class="form-label">Product <span class="info-icon">i</span></div><select class="select-field"><option>Select</option></select></div></div>
+      <hr class="section-divider">
+      <p class="section-title">Feature description and relevant screenshots</p>
+      <div class="form-label">Description <span class="info-icon">i</span></div>
+      <textarea class="textarea-field" readonly>e.g., Event Ticket Creation feature, available in the Events dashboard, allows users to create and configure tickets, then attach them to specific events for sale or distribution.</textarea>
+      <div style="margin-top:28px"><div class="radio-option radio-disabled"><div class="radio-circle"></div><div><div class="radio-label">Use link (coming soon)</div><div class="radio-sublabel">Add a Figma link to your project</div></div></div><hr class="section-divider" style="margin:12px 0"><div class="radio-option"><div class="radio-circle selected"></div><div><div class="radio-label">Upload screenshots</div><div class="radio-sublabel">You can upload multiple images at the same time. Each file should display one screen only.</div></div></div></div>
+      <div class="upload-zone"><span class="plus">+</span><span class="formats">Supported formats: .png, .jpg</span></div>
+      <div class="btn-row"><button class="btn-blue clickable" onclick="stepAction('v2',2)">Analyze Key Interactions</button></div>
+    </div></div>
+
+    <!-- V2 S2 -->
+    <div class="step-card"><div class="step-header" onclick="toggle('v2',2)"><div><h3 class="step-title">Step 2: Key interactions</h3><p class="step-subtitle">Review and refine AI-generated key interactions.</p></div><div class="step-header-right"><div class="chevron-circle" id="v2-chev-2"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+    <div class="step-body" id="v2-body-2">
+      <div class="screenshot-block"><div class="screenshot-side"><div class="screenshot-img-v2"><div class="fake-ui"><div style="width:100%;height:20px;background:#A0A8B8;border-radius:3px"></div><div style="width:60%;height:8px;background:#B8BFC9"></div><div style="width:100%;height:60%;background:#C8CDD5;border-radius:3px;margin-top:8px"></div></div></div><div class="screenshot-right"><p class="screenshot-label">Screenshot name</p><p class="ki-label">Key interactions</p><div class="ki-row"><input class="ki-input" value="Filter Events" readonly><div class="ki-dropdown"><span>Click</span><span class="ki-dropdown-arrow">▾</span></div><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div class="ki-row"><input class="ki-input" value="Manage View" readonly><div class="ki-dropdown"><span>Click</span><span class="ki-dropdown-arrow">▾</span></div><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div class="ki-row"><input class="ki-input" value="Create Event" readonly><div class="ki-dropdown"><span>Click</span><span class="ki-dropdown-arrow">▾</span></div><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><p class="add-key">+ Add Key</p></div></div></div>
+      <div class="screenshot-block"><div class="screenshot-side"><div class="screenshot-img-v2"><div class="fake-ui"><div style="width:100%;height:20px;background:#A0A8B8;border-radius:3px"></div><div style="width:50%;height:12px;background:#B8BFC9;margin-top:8px"></div><div style="width:80%;height:8px;background:#C8CDD5;margin-top:4px"></div></div></div><div class="screenshot-right"><p class="screenshot-label">Screenshot name</p><p class="ki-label">Key interactions</p><div class="ki-row"><input class="ki-input" value="Add Event" readonly><div class="ki-dropdown"><span>Click</span><span class="ki-dropdown-arrow">▾</span></div><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div class="ki-row"><input class="ki-input" value="Input Name" readonly><div class="ki-dropdown"><span>Entry</span><span class="ki-dropdown-arrow">▾</span></div><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div class="ki-row"><input class="ki-input" value="Select User Type" readonly><div class="ki-dropdown"><span>Click</span><span class="ki-dropdown-arrow">▾</span></div><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><p class="add-key">+ Add Key</p></div></div></div>
+      <div class="btn-row"><button class="btn-blue clickable" onclick="stepAction('v2',3)">Unify Key Interactions</button></div>
+    </div></div>
+
+    <!-- V2 S3 -->
+    <div class="step-card"><div class="step-header" onclick="toggle('v2',3)"><div><h3 class="step-title">Step 3: Unified Key Interactions</h3><p class="step-subtitle">Review and edit the unified key interactions before generating BI events.</p></div><div class="step-header-right"><span class="badge-regen"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5L10.5 6L15 7.5L10.5 9L9 13.5L7.5 9L3 7.5L7.5 6L9 1.5Z" stroke="#116DFF" stroke-width="1.2" stroke-linejoin="round"/><path d="M13.5 11.25L14.25 13.5L15 11.25L17.25 10.5L15 9.75L14.25 7.5L13.5 9.75L11.25 10.5L13.5 11.25Z" stroke="#116DFF" stroke-width="0.8" stroke-linejoin="round"/></svg> Re-generat</span><div class="chevron-circle" id="v2-chev-3"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+    <div class="step-body" id="v2-body-3">
+      <p class="ki-label">Key interactions</p>
+      <div class="ki-row"><input class="ki-input" value="Filter Events" readonly><div class="ki-dropdown"><span>Click</span><span class="ki-dropdown-arrow">▾</span></div><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="ki-row"><input class="ki-input" value="Manage View" readonly><div class="ki-dropdown"><span>Click</span><span class="ki-dropdown-arrow">▾</span></div><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="ki-row"><input class="ki-input" value="Create Event" readonly><div class="ki-dropdown"><span>Click</span><span class="ki-dropdown-arrow">▾</span></div><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="ki-row"><input class="ki-input" value="Edit Event" readonly><div class="ki-dropdown"><span>Click</span><span class="ki-dropdown-arrow">▾</span></div><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="ki-row"><input class="ki-input" value="View Event Details" readonly><div class="ki-dropdown"><span>Click</span><span class="ki-dropdown-arrow">▾</span></div><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <p class="add-key">+ Add Key</p>
+      <div class="btn-row" style="margin-top:60px"><button class="btn-blue clickable" onclick="stepAction('v2',4)">Generate BI events</button></div>
+    </div></div>
+
+    <!-- V2 S4 -->
+    <div class="step-card"><div class="step-header" onclick="toggle('v2',4)"><div><h3 class="step-title">Step 4: Suggested BI Events</h3><p class="step-subtitle">Review the suggested BI events.</p></div><div class="step-header-right"><span class="badge-regen"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5L10.5 6L15 7.5L10.5 9L9 13.5L7.5 9L3 7.5L7.5 6L9 1.5Z" stroke="#116DFF" stroke-width="1.2" stroke-linejoin="round"/><path d="M13.5 11.25L14.25 13.5L15 11.25L17.25 10.5L15 9.75L14.25 7.5L13.5 9.75L11.25 10.5L13.5 11.25Z" stroke="#116DFF" stroke-width="0.8" stroke-linejoin="round"/></svg> Re-generat</span><div class="chevron-circle" id="v2-chev-4"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+    <div class="step-body" id="v2-body-4">
+      <p class="section-title">Existing events (1) <span class="info-icon">i</span></p>
+      <div class="event-card-v2">
+        <div class="related-bar"><span class="rlabel">Related Key interactions:</span><span class="related-tag">Create Event: Click (Button)</span><span class="related-tag">Filter Events: Click (Dropdown/Filter options)</span></div>
+        <div class="event-divider"></div>
+        <div class="event-title-row"><div class="event-title-left"><div class="event-title-badge-row"><span class="event-id-badge">68:106</span><div class="event-title-divider"></div><span class="event-name-v2">add_event_click</span></div><p class="event-desc">Clicking on the 'add event' or 'create event' button in the BO My Events, BO cancelled event page, BO over event page or in settings panel.</p></div><span class="three-dots">⋯</span></div>
+        <p class="event-usertype"><span class="ut-label">User type:</span> users, anonymous</p>
+        <p class="event-fields-label">Fields:</p>
+        <table class="v2-table"><thead><tr><th>Input name</th><th>Target name</th><th>Type</th><th>Description</th><th>Added date</th><th>Mandatory</th></tr></thead><tbody><tr><td>draft_event</td><td>Event_hash</td><td>BOOL</td><td>{'settings_main', 'my events', 'c...</td><td>N/A</td><td>No</td></tr><tr><td>tab_name</td><td>Action_name</td><td>STRING</td><td>{'settings_main', 'my events', 'c...</td><td>N/A</td><td>No</td></tr><tr><td>button_name</td><td>Action_name</td><td>STRING</td><td>{'settings_main', 'my events', 'c...</td><td>N/A</td><td>No</td></tr></tbody></table>
+        <p class="see-more">See more fields (3) ↓</p>
+      </div>
+      <p class="section-title" style="margin-top:28px">New events (1) <span class="info-icon">i</span></p>
+      <p style="font-size:13px;color:#6B7280;margin-bottom:16px">New events id is temporary until you'll approve the events.</p>
+      <div class="event-card-v2">
+        <div class="related-bar"><span class="rlabel">Related Key interactions:</span><span class="related-tag">Create Event: Click (Button)</span><span class="related-tag">Filter Events: Click (Dropdown/Filter options)</span></div>
+        <div class="event-divider"></div>
+        <div class="event-title-row"><div class="event-title-left"><div class="event-title-badge-row"><span class="event-id-badge">68:107</span><div class="event-title-divider"></div><span class="event-name-v2">add_event_click</span></div><p class="event-desc">Clicking on the 'add event' or 'create event' button in the BO My Events, BO cancelled event page, BO over event page or in settings panel.</p></div><span class="three-dots">⋯</span></div>
+        <p class="event-usertype"><span class="ut-label">User type:</span> users, anonymous</p>
+        <p class="event-fields-label">Fields:</p>
+        <table class="v2-table"><thead><tr><th>Input name</th><th>Target name</th><th>Type</th><th>Description</th><th>Added date</th><th>Mandatory</th></tr></thead><tbody><tr><td>draft_event</td><td>Event_hash</td><td>BOOL</td><td>{'settings_main', 'my events', 'c...</td><td>N/A</td><td>No</td></tr><tr><td>tab_name</td><td>Action_name</td><td>STRING</td><td>{'settings_main', 'my events', 'c...</td><td>N/A</td><td>No</td></tr><tr><td>button_name</td><td>Action_name</td><td>STRING</td><td>{'settings_main', 'my events', 'c...</td><td>N/A</td><td>No</td></tr></tbody></table>
+        <p class="see-more">See more fields (3) ↓</p>
+      </div>
+      <div class="btn-row"><button class="btn-blue clickable" onclick="stepAction('v2',5)">Split by Screens</button></div>
+    </div></div>
+
+    <!-- V2 S5 -->
+    <div class="step-card"><div class="step-header" onclick="toggle('v2',5)"><div><h3 class="step-title">Step 5: Review BI events and their values per screenshot</h3><p class="step-subtitle">Review and confirm BI events value per screenshot. The events you approve here will be added to the catalog as drafts.</p></div><div class="step-header-right"><div class="chevron-circle" id="v2-chev-5"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+    <div class="step-body" id="v2-body-5">
+      <div class="screenshot-container-v2">
+        <div class="screenshot-header-v2"><span>Screenshot name</span><div class="chevron-circle open" style="width:30px;height:30px"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+        <div class="screenshot-header-divider"></div>
+        <div class="screenshot-img-area"><div class="mountain-placeholder"><img src="data:image/png;base64,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" alt="Screenshot placeholder"></div></div>
+
+        <div class="accordion-row-v2"><div class="arrow-right"></div><span style="font-weight:500">Button cancel</span><div class="vert-div"></div><span style="font-weight:500">12:102 event name</span><span class="badge-existing">Existing event</span></div>
+
+        <div class="accordion-row-v2" style="border-bottom:none"><div class="arrow-down"></div><span style="font-weight:500">Button cancel</span><div class="vert-div"></div><span style="font-weight:500">12:102 event name</span><span class="badge-new">New event</span></div>
+
+        <div class="accordion-expanded-v2">
+          <table class="v2-table-inner"><thead><tr><th>Input name</th><th>Target name</th><th>Type</th><th>Description</th><th>Value</th><th>Static value <span class="info-icon" style="font-size:8px">i</span></th></tr></thead><tbody>
+            <tr><td>draft_event</td><td>Event_hash</td><td>BOOL</td><td>{'settings_main', 'my events', 'cancelled event', 'over event'}</td><td><span class="value-textarea">{'settings_main', 'my..</span></td><td><span class="dyn-checkbox-v2"></span></td></tr>
+            <tr><td>tab_name</td><td>Action_name</td><td>STRING</td><td>{'settings_main', 'my events', 'cancelled event', 'over event'}</td><td><span class="value-textarea">{'settings_main', 'my..</span></td><td><span class="dyn-checkbox-v2"></span></td></tr>
+            <tr><td>button_name</td><td>Action_name</td><td>STRING</td><td>{'settings_main', 'my events', 'cancelled event', 'over event'}</td><td><span class="value-textarea">{'settings_main', 'my</span></td><td><span class="dyn-checkbox-v2"></span></td></tr>
+          </tbody></table>
+          <p style="color:#116DFF;font-size:14px;font-weight:500;text-align:center;margin-top:12px;padding:12px 0">See more fields (3) ↓</p>
+        </div>
+        <div style="height:1px;background:#DFE5EB"></div>
+      </div>
+      <div class="btn-row" style="margin-top:32px"><button class="btn-confirm">Confirm & Finish</button></div>
+    </div></div>
+
+  </div></div>
+
+  </div><!-- /version-wrapper -->
+
+  <script>
+    function toggle(ver, id) {
+      var body = document.getElementById(ver + '-body-' + id);
+      var chev = document.getElementById(ver + '-chev-' + id);
+      body.classList.toggle('open');
+      chev.classList.toggle('open');
+    }
+
+    var loaderMessages = {
+      'v1-2': 'Generating business questions...',
+      'v1-3': 'Unifying business questions...',
+      'v1-4': 'Generating BI events...',
+      'v1-5': 'Mapping events to screenshots...',
+      'v2-2': 'Analyzing key interactions...',
+      'v2-3': 'Unifying key interactions...',
+      'v2-4': 'Generating BI events...',
+      'v2-5': 'Splitting events by screens...'
+    };
+
+    function stepAction(ver, toStep) {
+      var body = document.getElementById(ver + '-body-' + toStep);
+      var chev = document.getElementById(ver + '-chev-' + toStep);
+      if (!body) return;
+
+      // Open accordion if closed
+      if (!body.classList.contains('open')) {
+        body.classList.add('open');
+        if (chev) chev.classList.add('open');
+      }
+
+      // Save original content and show loader
+      var key = ver + '-' + toStep;
+      var msg = loaderMessages[key] || 'Loading...';
+
+      // Store original if not already stored
+      if (!body.dataset.original) {
+        body.dataset.original = body.innerHTML;
+      }
+
+      body.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 0;gap:14px;animation:fadeIn 0.3s ease">' +
+        '<div class="spinner"></div>' +
+        '<div class="loader-text">' + msg + '</div></div>';
+
+      // Scroll to it
+      setTimeout(function() {
+        body.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+
+      // After 2s, restore content with fade
+      setTimeout(function() {
+        body.style.opacity = '0';
+        setTimeout(function() {
+          body.innerHTML = body.dataset.original;
+          body.style.opacity = '1';
+        }, 300);
+      }, 2000);
+    }
+
+    function switchVersion(ver, btn) {
+      document.querySelectorAll('.version-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var v1 = document.getElementById('v1-content');
+      var v2 = document.getElementById('v2-content');
+      if (ver === 'v1') {
+        v2.style.opacity = '0';
+        setTimeout(function() { v2.classList.remove('active'); v1.classList.add('active'); setTimeout(function() { v1.style.opacity = '1'; }, 20); }, 400);
+      } else {
+        v1.style.opacity = '0';
+        setTimeout(function() { v1.classList.remove('active'); v2.classList.add('active'); setTimeout(function() { v2.style.opacity = '1'; }, 20); }, 400);
+      }
+    }
+  </script>
+</body>
+</html>
