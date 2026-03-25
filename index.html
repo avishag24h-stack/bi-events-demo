@@ -193,7 +193,7 @@
     </div></div></div>
 
     <!-- V1 S2 -->
-    <div class="step-card"><div class="step-header" onclick="toggle('v1',2)"><div><h3 class="step-title">Step 2: Business Questions and Key Interactions</h3><p class="step-subtitle">Review and edit generated business questions for each "left click" image</p></div><div class="step-header-right"><div class="chevron-circle" id="v1-chev-2"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+    <div class="step-card"><div class="step-header" onclick="toggle('v1',2)"><div><h3 class="step-title">Step 2: Business Questions and Key Interactions</h3><p class="step-subtitle">Review and edit generated business questions for each image</p></div><div class="step-header-right"><div class="chevron-circle" id="v1-chev-2"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body" id="v1-body-2">
       <div class="side-layout"><div class="screenshot-thumb"><div class="screenshot-card"><div class="screenshot-img"><div class="screenshot-fake"><div style="width:60%;height:4px;background:#A0A8B8"></div><div style="width:90%;height:3px;background:#B8BFC9"></div><div style="width:75%;height:3px;background:#B8BFC9"></div><div style="width:85%;height:3px;background:#B8BFC9"></div></div></div><div class="screenshot-info"><p>Screenshot 2025-01-31 at 11.32.27.png</p><p class="sub">v1.0_IIS</p></div></div></div>
       <div class="side-content"><p style="font-size:12px;color:#6B7280;margin-bottom:6px">Business Questions were generated for "Screenshot 2025 07 31 at 11.0.27.png" *</p><div class="toolbar"><button>↩</button><button>↪</button><div class="sep"></div><button><b>B</b></button><button><i>I</i></button><button><u>U</u></button><button><s>S</s></button><div class="sep"></div><button>&lt;&gt;</button><div class="sep"></div><button>☰</button><button>≡</button><button>⋮≡</button><div class="sep"></div><select><option>Paragraph</option></select><div class="spacer"></div><button>⎘</button><button>⊞</button><button>↻</button></div>
@@ -323,15 +323,19 @@
   </div><!-- /version-wrapper -->
 
   <script>
+    window.v1Images = [];
+
     function handleV1Images(input) {
       var files = Array.from(input.files).slice(0, 2);
       if (!files.length) return;
       var container = document.getElementById('v1-images-container');
       container.innerHTML = '';
+      window.v1Images = [];
       var loadedCount = 0;
-      files.forEach(function(file) {
+      files.forEach(function(file, idx) {
         var reader = new FileReader();
         reader.onload = function(e) {
+          window.v1Images[idx] = { src: e.target.result, name: file.name };
           var wrap = document.createElement('div');
           wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:4px;';
           var img = document.createElement('img');
@@ -356,8 +360,23 @@
         };
         reader.readAsDataURL(file);
       });
-      // Reset input so same file can be re-selected if needed
       input.value = '';
+    }
+
+    function injectV1Images(body) {
+      if (!window.v1Images || !window.v1Images.length) return;
+      var imgDivs = body.querySelectorAll('.screenshot-img');
+      imgDivs.forEach(function(imgDiv, i) {
+        var data = window.v1Images[i] || window.v1Images[0];
+        if (!data) return;
+        imgDiv.innerHTML = '';
+        var img = document.createElement('img');
+        img.src = data.src;
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;border-radius:2px;';
+        imgDiv.appendChild(img);
+        var infoP = imgDiv.closest('.screenshot-card') && imgDiv.closest('.screenshot-card').querySelector('.screenshot-info p');
+        if (infoP) infoP.textContent = data.name;
+      });
     }
 
     function toggle(ver, id) {
@@ -413,6 +432,7 @@
         setTimeout(function() {
           body.innerHTML = body.dataset.original;
           body.style.opacity = '1';
+          if (ver === 'v1') injectV1Images(body);
         }, 300);
       }, 2000);
     }
