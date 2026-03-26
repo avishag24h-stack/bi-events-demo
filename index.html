@@ -457,6 +457,19 @@
       }, 2000);
     }
 
+    // Step 1 text area: when user types inside a gray placeholder paragraph, make it black
+    document.getElementById('v1-context-input').addEventListener('input', function() {
+      var sel = window.getSelection();
+      if (!sel || !sel.rangeCount) return;
+      var node = sel.anchorNode;
+      var el = node ? (node.nodeType === 3 ? node.parentElement : node) : null;
+      if (!el) return;
+      var para = el.closest('p') || el.closest('div');
+      if (para && para.classList.contains('gray-text')) {
+        para.classList.remove('gray-text');
+      }
+    });
+
     function switchVersion(ver, btn) {
       document.querySelectorAll('.version-btn').forEach(function(b) { b.classList.remove('active'); });
       btn.classList.add('active');
