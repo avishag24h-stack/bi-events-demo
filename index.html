@@ -152,6 +152,8 @@
     .screenshot-info { padding: 6px 8px; } .screenshot-info p { font-size: 10px; color: #6B7280; margin: 0; } .screenshot-info .sub { font-size: 9px; color: #9CA3AF; margin-top: 1px; }
     .side-layout { display: flex; gap: 16px; flex-wrap: wrap; } .side-content { flex: 1; min-width: 260px; }
     .upload-area { margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:20px; }
+    .step-note { position:absolute;top:78px;right:20px;width:210px;background:#FFFBEB;border-left:3px solid #F59E0B;border-radius:8px;padding:10px 14px;font-size:12px;color:#78350F;line-height:1.6;z-index:20;box-shadow:0 6px 24px rgba(0,0,0,0.13);opacity:0;pointer-events:none;transition:opacity 0.35s ease; }
+    .step-note.visible { opacity:1;pointer-events:auto; }
     .event-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
     .event-table th { text-align: left; padding: 10px 12px; font-weight: 600; font-size: 12px; color: #6B7280; border-bottom: 1px solid #E5E7EB; background: #F9FAFB; }
     .event-table td { padding: 10px 12px; font-size: 13px; color: #374151; border-bottom: 1px solid #F3F4F6; }
@@ -173,9 +175,7 @@
 
     <!-- V1 S1 -->
     <div style="position:relative;">
-    <div style="position:absolute;top:78px;right:20px;width:210px;background:#FFFBEB;border-left:3px solid #F59E0B;border-radius:8px;padding:10px 14px;font-size:12px;color:#78350F;line-height:1.6;z-index:20;box-shadow:0 6px 24px rgba(0,0,0,0.13);">
-      User uploads a screenshot and some context related to them and to the BI assets of the group.
-    </div>
+    <div id="v1-note-1" class="step-note visible">User uploads a screenshot and some context related to them and to the BI assets of the group.</div>
     <div class="step-card"><div class="step-header" onclick="toggle('v1',1)"><div><h3 class="step-title">Step 1: Context & Screenshots</h3><p class="step-subtitle">Provide business context and upload screenshots</p></div><div class="step-header-right"><div class="chevron-circle open" id="v1-chev-1"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body open" id="v1-body-1">
       <span class="label">Business Context *</span>
@@ -194,9 +194,7 @@
 
     <!-- V1 S2 -->
     <div style="position:relative;">
-    <div style="position:absolute;top:78px;right:20px;width:210px;background:#FFFBEB;border-left:3px solid #F59E0B;border-radius:8px;padding:10px 14px;font-size:12px;color:#78350F;line-height:1.6;z-index:20;box-shadow:0 6px 24px rgba(0,0,0,0.13);">
-      AI detects key interactions (trigger points) and business questions.
-    </div>
+    <div id="v1-note-2" class="step-note">AI detects key interactions (trigger points) and business questions.</div>
     <div class="step-card"><div class="step-header" onclick="toggle('v1',2)"><div><h3 class="step-title">Step 2: Business Questions and Key Interactions</h3><p class="step-subtitle">Review and edit generated business questions for each image</p></div><div class="step-header-right"><div class="chevron-circle" id="v1-chev-2"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body" id="v1-body-2">
       <div class="side-layout"><div class="screenshot-thumb"><div class="screenshot-card"><div class="screenshot-img"><div class="screenshot-fake"><div style="width:60%;height:4px;background:#A0A8B8"></div><div style="width:90%;height:3px;background:#B8BFC9"></div><div style="width:75%;height:3px;background:#B8BFC9"></div><div style="width:85%;height:3px;background:#B8BFC9"></div></div></div><div class="screenshot-info"><p>Screenshot 2025-01-31 at 11.32.27.png</p><p class="sub">v1.0_IIS</p></div></div></div>
@@ -206,29 +204,35 @@
     </div></div></div>
 
     <!-- V1 S3 -->
+    <div style="position:relative;">
+    <div id="v1-note-3" class="step-note">Unified key interactions and business questions. This step also offers the option to select the event type — we noticed most users weren't familiar with the "Generic" event type.</div>
     <div class="step-card"><div class="step-header" onclick="toggle('v1',3)"><div><h3 class="step-title">Step 3: Unified Business Questions and Key Interactions</h3><p class="step-subtitle">Review and edit the unified business questions before generating BI events</p></div><div class="step-header-right"><div class="chevron-circle" id="v1-chev-3"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body" id="v1-body-3">
       <span class="label">Unified Business Questions *</span>
       <div class="toolbar"><button>↩</button><button>↪</button><div class="sep"></div><button><b>B</b></button><button><i>I</i></button><button><u>U</u></button><button><s>S</s></button><div class="sep"></div><button>&lt;&gt;</button><div class="sep"></div><button>☰</button><button>≡</button><button>⋮≡</button><div class="sep"></div><select><option>Paragraph</option></select><div class="spacer"></div><button>⎘</button><button>⊞</button><button>↻</button></div>
       <div class="rich-area"><p class="bold" style="margin-bottom:8px">Unified Business Questions</p><p style="margin-bottom:3px">• What is the average session duration for users who perform [action] in the last [timeframe]? (KPI: Session Duration)</p><p style="margin-bottom:3px">• What percentage of users successfully complete [action] without errors? (KPI: Success Rate)</p><p style="margin-bottom:3px">• Are users who frequently perform [action] more likely to return within the next [timeframe]? (KPI: Retention / Return Rate)</p><p style="margin-bottom:3px">• How easily do users find and access the "[feature]" from the main interface? (KPI: Discoverability)</p><p style="margin-bottom:14px">• What is the error rate when users attempt to perform [action]? (KPI: Error Rate / Failure Rate)</p><p class="bold" style="margin-bottom:8px">Unified Key Interactions</p><p style="margin-bottom:3px">• <strong>Run (action):</strong> Click [ButtonType] to execute in the [section]</p><p style="margin-bottom:3px">• <strong>Edit (action):</strong> Entry / Text input area for [section/Task]</p><p style="margin-bottom:3px">• <strong>View Results:</strong> Click [Button] to see results at the [section]</p><p style="margin-bottom:3px">• <strong>Select (dataType):</strong> Click [Dropdown] to choose [dataType]</p><p>• <strong>Access Help:</strong> Click [Help icon] for documentation</p></div>
       <div class="btn-row"><button class="btn-blue clickable" onclick="stepAction('v1',4)">Generate Specific Events</button><button class="btn-outline">Generate Generic Events</button></div>
-    </div></div>
+    </div></div></div>
 
     <!-- V1 S4 -->
+    <div style="position:relative;">
+    <div id="v1-note-4" class="step-note">Suggested events to reuse from the BI Catalog, or create new ones if needed. In this POC, editing was not available — one of the first analyst requests. They preferred to edit and add to the AI output rather than regenerate. The screenshot was also too small and hard to read.</div>
     <div class="step-card"><div class="step-header" onclick="toggle('v1',4)"><div><h3 class="step-title">Step 4: Suggested BI Events</h3><p class="step-subtitle">BI events review completed</p></div><div class="step-header-right"><span class="badge-green">SPECIFIC EVENTS</span><div class="chevron-circle" id="v1-chev-4"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body" id="v1-body-4">
       <div class="toolbar"><button>↩</button><button>↪</button><div class="sep"></div><button><b>B</b></button><button><i>I</i></button><button><u>U</u></button><button><s>S</s></button><div class="sep"></div><button>&lt;&gt;</button><div class="sep"></div><button>☰</button><button>≡</button><button>⋮≡</button><div class="sep"></div><select><option>Paragraph</option></select><div class="spacer"></div><button>⎘</button><button>⊞</button><button>↻</button></div>
       <div class="rich-area"><p class="bold" style="margin-bottom:14px;font-size:13px">Reused Events</p><div><p style="font-size:13px"><strong>Event Name:</strong> <span class="event-name">LoadFinished</span></p><p style="font-size:12px"><strong>Evid:</strong> 7.0.0</p><p style="font-size:12px"><strong>Description:</strong> Load finished</p><p style="font-size:12px;margin-bottom:6px"><strong>User Type:</strong> legacy_internal</p><p class="fields-label">Fields:</p><table class="event-table"><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td>duration</td><td>NUMERIC</td><td>duration</td></tr><tr><td>session_id</td><td>GUID</td><td>session_id</td></tr><tr><td>app_name</td><td>STRING</td><td>app_name</td></tr><tr><td>first_resp_est_duration</td><td>NUMERIC</td><td>first_resp_est_duration</td></tr></tbody></table></div><div style="margin-top:20px"><p style="font-size:13px"><strong>Event Name:</strong> <span class="event-name">interaction_finished</span></p><p style="font-size:12px"><strong>Evid:</strong> 2.0.0</p><p style="font-size:12px"><strong>Description:</strong> Interaction finished.</p><p style="font-size:12px;margin-bottom:6px"><strong>User Type:</strong> legacy_internal</p><p class="fields-label">Fields:</p><table class="event-table"><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td>duration</td><td>NUMERIC</td><td>duration</td></tr><tr><td>name</td><td>STRING</td><td>name</td></tr><tr><td>session_id</td><td>GUID</td><td>session_id</td></tr><tr><td>app_name</td><td>STRING</td><td>app_name</td></tr><tr><td>interaction_label</td><td>STRING</td><td>interaction_label</td></tr></tbody></table></div><div style="margin-top:20px"><p style="font-size:13px"><strong>Event Name:</strong> <span class="event-name">reading_action_click</span></p><p style="font-size:12px"><strong>Evid:</strong> 0.0.7</p><p style="font-size:12px"><strong>Description:</strong> Wording / action / text / actions</p><p style="font-size:12px;margin-bottom:6px"><strong>User Type:</strong> s-xxx</p><p class="fields-label">Fields:</p><table class="event-table"><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td>button_name</td><td>STRING</td><td>Action button app_text, reflect... results</td></tr><tr><td>action</td><td>STRING</td><td>Text input: 1, 2, 3</td></tr><tr><td>vertical</td><td>STRING</td><td>Where the product is area: from</td></tr><tr><td>type</td><td>STRING</td><td>Type of genre: doc, name, component, discover</td></tr></tbody></table></div></div>
       <div class="btn-row"><button class="btn-blue clickable" onclick="stepAction('v1',5)">Split by Screens</button></div>
-    </div></div>
+    </div></div></div>
 
     <!-- V1 S5 -->
+    <div style="position:relative;">
+    <div id="v1-note-5" class="step-note">Eventor analyzes the screenshot and flow to generate a mapping plan. It automatically populates field values for any new events created during this session.</div>
     <div class="step-card"><div class="step-header" onclick="toggle('v1',5)"><div><h3 class="step-title">Step 5: Review BI Events per Screenshot</h3><p class="step-subtitle">BI events per screenshot reviewed successfully</p></div><div class="step-header-right"><span class="badge-green">SPECIFIC EVENTS</span><div class="chevron-circle" id="v1-chev-5"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body" id="v1-body-5">
       <div class="side-layout"><div class="screenshot-thumb"><div class="screenshot-card"><div class="screenshot-img" style="height:100px"><div class="screenshot-fake"><div style="width:60%;height:4px;background:#A0A8B8"></div><div style="width:90%;height:3px;background:#B8BFC9"></div><div style="width:75%;height:3px;background:#B8BFC9"></div></div></div><div class="screenshot-info"><p>Screenshot 2025-07-30 at 11.33.27.png</p></div></div></div>
       <div class="side-content"><p style="font-size:12px;color:#6B7280;margin-bottom:6px">BI Events for "Screenshot 2025 07 31 at 11.0.27.png" *</p><div class="toolbar"><button>↩</button><button>↪</button><div class="sep"></div><button><b>B</b></button><button><i>I</i></button><button><u>U</u></button><button><s>S</s></button><div class="sep"></div><button>&lt;&gt;</button><div class="sep"></div><button>☰</button><button>≡</button><button>⋮≡</button><div class="sep"></div><select><option>Paragraph</option></select><div class="spacer"></div><button>⎘</button><button>⊞</button><button>↻</button></div>
       <div class="rich-area"><p class="bold" style="margin-bottom:8px">Event Mapping Plan</p><p class="semibold" style="margin-bottom:4px">Analyzed UI Screenshot</p><p style="font-size:12px;color:#6B7280;margin-bottom:12px">The provided screenshot shows a user interface for executing API calls, with visible UI elements such as buttons, inputs, areas, and navigation options.</p><p class="semibold" style="margin-bottom:8px">Mapped BI Events</p><div><p style="font-size:13px"><strong>Event Name:</strong> <span class="event-name">LoadFinished</span></p><p style="font-size:12px"><strong>Evid:</strong> 7.0.0</p><p style="font-size:12px"><strong>Description:</strong> Load finished</p><p style="font-size:12px;margin-bottom:6px"><strong>User Type:</strong> legacy_internal</p><p class="fields-label">Fields:</p><table class="event-table"><thead><tr><th>Name</th><th>Type</th><th>Description</th><th>Example Value</th></tr></thead><tbody><tr><td>duration</td><td>NUMERIC</td><td>duration</td><td>72</td></tr><tr><td>session_id</td><td>GUID</td><td>session_id</td><td>c2345-abcde</td></tr></tbody></table></div></div></div></div>
-    </div></div>
+    </div></div></div>
 
   </div></div>
 
@@ -386,8 +390,16 @@
     function toggle(ver, id) {
       var body = document.getElementById(ver + '-body-' + id);
       var chev = document.getElementById(ver + '-chev-' + id);
+      var note = document.getElementById(ver + '-note-' + id);
       body.classList.toggle('open');
       chev.classList.toggle('open');
+      if (note) {
+        if (body.classList.contains('open')) {
+          note.classList.add('visible');
+        } else {
+          note.classList.remove('visible');
+        }
+      }
     }
 
     var loaderMessages = {
@@ -437,6 +449,8 @@
           body.innerHTML = body.dataset.original;
           body.style.opacity = '1';
           if (ver === 'v1') injectV1Images(body);
+          var note = document.getElementById(ver + '-note-' + toStep);
+          if (note) note.classList.add('visible');
         }, 300);
       }, 2000);
     }
