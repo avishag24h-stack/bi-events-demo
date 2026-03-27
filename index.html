@@ -159,6 +159,30 @@
     .event-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
     .event-table th { text-align: left; padding: 10px 12px; font-weight: 600; font-size: 12px; color: #6B7280; border-bottom: 1px solid #E5E7EB; background: #F9FAFB; }
     .event-table td { padding: 10px 12px; font-size: 13px; color: #374151; border-bottom: 1px solid #F3F4F6; }
+
+    /* ─── V2 Step 1 Redesign ─── */
+    .v2-form-label { font-size: 13px; font-weight: 600; color: #44485f; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+    .v2-info-icon { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #116DFF; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; color: #116DFF; font-weight: 700; font-style: normal; flex-shrink: 0; cursor: default; }
+    .v2-info-disabled { border-color: #868aa5 !important; color: #868aa5 !important; }
+    .v2-dropdown-wrap { position: relative; height: 36px; border-radius: 6px; display: flex; align-items: center; padding: 0 10px; gap: 6px; user-select: none; }
+    .v2-dropdown-filled { border: 1px solid #d6e6fe; background: white; cursor: default; }
+    .v2-dropdown-active { border: 1px solid #d6e6fe; background: white; cursor: pointer; }
+    .v2-dropdown-disabled { border: 1px solid rgba(0,6,36,0.1); background: white; cursor: not-allowed; }
+    .v2-dropdown-loading { border: 1px solid #d6e6fe; background: white; cursor: default; }
+    .v2-dropdown-value { font-size: 14px; color: #000624; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .v2-placeholder { color: #868aa5 !important; }
+    .v2-dropdown-arrow { font-size: 11px; color: #44485f; flex-shrink: 0; }
+    .v2-dropdown-menu { position: absolute; top: calc(100% + 4px); left: 0; min-width: 100%; background: white; border: 1px solid #d6e6fe; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,6,36,0.12); z-index: 200; overflow: hidden; }
+    .v2-dropdown-item { padding: 10px 14px; font-size: 14px; color: #000624; cursor: pointer; }
+    .v2-dropdown-item:hover { background: #F4F7FF; }
+    .v2-dropdown-footer { padding: 8px 14px; border-top: 1px solid #E5E7EB; cursor: pointer; }
+    .v2-field-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #D6E6FE; border-top-color: #116DFF; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; }
+    .v2-textarea { width: 100%; padding: 12px 14px; border: 1px solid rgba(0,6,36,0.1); border-radius: 6px; font-size: 14px; color: #000624; min-height: 60px; resize: vertical; font-family: inherit; line-height: 1.5; background: white; outline: none; }
+    .v2-textarea::placeholder { color: #868aa5; }
+    .v2-upload-zone { border: 2px dashed #a8caff; background: #f4f7ff; border-radius: 12px; padding: 28px 20px; display: flex; align-items: center; justify-content: center; margin-top: 16px; min-height: 100px; cursor: pointer; transition: background 0.2s ease; }
+    .v2-upload-zone:hover { background: #eaf1ff; }
+    .v2-analyze-btn { background: #116DFF; color: white; border: none; border-radius: 100px; padding: 10px 28px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.2s ease; }
+    .v2-analyze-btn:hover { opacity: 0.88; }
   </style>
 </head>
 <body>
@@ -244,15 +268,79 @@
     <!-- V2 S1 -->
     <div class="step-card"><div class="step-header" onclick="toggle('v2',1)"><div><h3 class="step-title">Step 1: Context & Screenshots</h3><p class="step-subtitle">Provide business context and upload screenshots.</p></div><div class="step-header-right"><div class="chevron-circle open" id="v2-chev-1"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body open" id="v2-body-1">
-      <p class="section-title">Business context</p>
-      <div class="form-row"><div class="form-field"><div class="form-label">Src <span class="info-icon">i</span></div><select class="select-field"><option>Select</option></select></div><div class="form-field"><div class="form-label">Owner <span class="info-icon">i</span></div><select class="select-field"><option>Select</option></select></div><div class="form-field"><div class="form-label">Domain <span class="info-icon">i</span></div><select class="select-field"><option>Select</option></select></div><div class="form-field"><div class="form-label">Product <span class="info-icon">i</span></div><select class="select-field"><option>Select</option></select></div></div>
+      <p style="font-size:14px;font-weight:700;color:#000624;margin-bottom:18px">Business context</p>
+      <div class="form-row">
+        <div class="form-field">
+          <div class="v2-form-label">Src <span class="v2-info-icon">i</span></div>
+          <div class="v2-dropdown-wrap v2-dropdown-filled">
+            <span class="v2-dropdown-value">179 - Data Platform</span>
+            <span class="v2-dropdown-arrow">▾</span>
+          </div>
+        </div>
+        <div class="form-field">
+          <div class="v2-form-label">Owner <span class="v2-info-icon">i</span></div>
+          <div class="v2-dropdown-wrap v2-dropdown-active" id="v2-owner-wrap" onclick="v2OwnerToggle(event)">
+            <span class="v2-dropdown-value v2-placeholder" id="v2-owner-val">Select</span>
+            <span class="v2-dropdown-arrow">▾</span>
+            <div class="v2-dropdown-menu" id="v2-owner-menu" style="display:none">
+              <div class="v2-dropdown-item" onclick="v2SelectOwner(event,'Data product')">Data product</div>
+              <div class="v2-dropdown-item" onclick="v2SelectOwner(event,'Data explorer admins')">Data explorer admins</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-field">
+          <div class="v2-form-label" id="v2-domain-label" style="color:#868aa5">Domain <span class="v2-info-icon v2-info-disabled">i</span></div>
+          <div class="v2-dropdown-wrap v2-dropdown-disabled" id="v2-domain-wrap">
+            <span class="v2-dropdown-value v2-placeholder" id="v2-domain-val">Select</span>
+            <span class="v2-dropdown-arrow" style="color:#868aa5">▾</span>
+            <div class="v2-dropdown-menu" id="v2-domain-menu" style="display:none">
+              <div class="v2-dropdown-item" onclick="v2PickField(event,'v2-domain-val','v2-domain-wrap','Data platform')">Data platform</div>
+              <div class="v2-dropdown-item" onclick="v2PickField(event,'v2-domain-val','v2-domain-wrap','Data dev')">Data dev</div>
+              <div class="v2-dropdown-footer" onclick="event.stopPropagation()"><span style="color:#116DFF;font-size:13px;font-weight:500">+ Go to Create Domain</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-field">
+          <div class="v2-form-label" id="v2-product-label" style="color:#868aa5">Product <span class="v2-info-icon v2-info-disabled">i</span></div>
+          <div class="v2-dropdown-wrap v2-dropdown-disabled" id="v2-product-wrap">
+            <span class="v2-dropdown-value v2-placeholder" id="v2-product-val">Select</span>
+            <span class="v2-dropdown-arrow" style="color:#868aa5">▾</span>
+            <div class="v2-dropdown-menu" id="v2-product-menu" style="display:none">
+              <div class="v2-dropdown-item" onclick="v2PickField(event,'v2-product-val','v2-product-wrap','Quix')">Quix</div>
+              <div class="v2-dropdown-item" onclick="v2PickField(event,'v2-product-val','v2-product-wrap','Snitch')">Snitch</div>
+              <div class="v2-dropdown-item" onclick="v2PickField(event,'v2-product-val','v2-product-wrap','Catalog')">Catalog</div>
+              <div class="v2-dropdown-footer" onclick="event.stopPropagation()"><span style="color:#116DFF;font-size:13px;font-weight:500">+ Go to Create Domain</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
       <hr class="section-divider">
-      <p class="section-title">Feature description and relevant screenshots</p>
-      <div class="form-label">Description <span class="info-icon">i</span></div>
-      <textarea class="textarea-field" readonly>e.g., Event Ticket Creation feature, available in the Events dashboard, allows users to create and configure tickets, then attach them to specific events for sale or distribution.</textarea>
-      <div style="margin-top:28px"><div class="radio-option radio-disabled"><div class="radio-circle"></div><div><div class="radio-label">Use link (coming soon)</div><div class="radio-sublabel">Add a Figma link to your project</div></div></div><hr class="section-divider" style="margin:12px 0"><div class="radio-option"><div class="radio-circle selected"></div><div><div class="radio-label">Upload screenshots</div><div class="radio-sublabel">You can upload multiple images at the same time. Each file should display one screen only.</div></div></div></div>
-      <div class="upload-zone"><span class="plus">+</span><span class="formats">Supported formats: .png, .jpg</span></div>
-      <div class="btn-row"><button class="btn-blue clickable" onclick="stepAction('v2',2)">Analyze Key Interactions</button></div>
+      <p style="font-size:14px;font-weight:700;color:#000624;margin-bottom:14px">Feature description and relevant screenshots</p>
+      <div class="v2-form-label" style="margin-bottom:8px">Description <span class="v2-info-icon">i</span></div>
+      <textarea class="v2-textarea" placeholder="e.g., Event Ticket Creation feature, available in the Events dashboard, allows users to create and configure tickets, then attach them to specific events for sale or distribution."></textarea>
+      <div style="margin-top:24px">
+        <div class="radio-option" style="opacity:0.45;cursor:not-allowed;pointer-events:none">
+          <div class="radio-circle"></div>
+          <div><div class="radio-label">Use link <span style="font-weight:400;color:#9CA3AF">(coming soon)</span></div><div class="radio-sublabel">Add a Figma link to your project</div></div>
+        </div>
+        <hr class="section-divider" style="margin:12px 0">
+        <div class="radio-option">
+          <div class="radio-circle selected"></div>
+          <div><div class="radio-label">Upload screenshots</div><div class="radio-sublabel">You can upload multiple images at the same time. Each file should display one screen only.</div></div>
+        </div>
+      </div>
+      <input type="file" id="v2-file-input" accept="image/*" multiple style="display:none" onchange="handleV2Images(this)">
+      <div class="v2-upload-zone" onclick="document.getElementById('v2-file-input').click()">
+        <div id="v2-images-container" style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;align-items:center;width:100%">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <div style="width:40px;height:40px;border-radius:50%;background:#d6e6fe;display:flex;align-items:center;justify-content:center">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><line x1="10" y1="4" x2="10" y2="16" stroke="#116DFF" stroke-width="1.8" stroke-linecap="round"/><line x1="4" y1="10" x2="16" y2="10" stroke="#116DFF" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <span style="font-size:12px;color:#868aa5">Supported formats: .png, .jpg</span>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row"><button class="v2-analyze-btn" onclick="stepAction('v2',2)">Analyze Key Interactions</button></div>
     </div></div>
 
     <!-- V2 S2 -->
@@ -469,6 +557,100 @@
         para.classList.remove('gray-text');
       }
     });
+
+    // ─── V2 Step 1 dropdown logic ───
+    var _v2OwnerDone = false;
+
+    function v2CloseAllMenus() {
+      document.querySelectorAll('.v2-dropdown-menu').forEach(function(m) { m.style.display = 'none'; });
+    }
+
+    function v2OwnerToggle(e) {
+      e.stopPropagation();
+      var menu = document.getElementById('v2-owner-menu');
+      var isOpen = menu && menu.style.display !== 'none';
+      v2CloseAllMenus();
+      if (!isOpen && menu) menu.style.display = 'block';
+    }
+
+    function v2SelectOwner(e, value) {
+      e.stopPropagation();
+      var valEl = document.getElementById('v2-owner-val');
+      if (valEl) { valEl.textContent = value; valEl.classList.remove('v2-placeholder'); }
+      v2CloseAllMenus();
+      if (!_v2OwnerDone) {
+        _v2OwnerDone = true;
+        _v2EnableField('v2-domain-wrap', 'v2-domain-val', 'v2-domain-menu', 'v2-domain-label');
+        _v2EnableField('v2-product-wrap', 'v2-product-val', 'v2-product-menu', 'v2-product-label');
+      }
+    }
+
+    function _v2EnableField(wrapId, valId, menuId, labelId) {
+      var wrap = document.getElementById(wrapId);
+      var valEl = document.getElementById(valId);
+      if (!wrap || !valEl) return;
+      wrap.classList.remove('v2-dropdown-disabled');
+      wrap.classList.add('v2-dropdown-loading');
+      valEl.innerHTML = '<span class="v2-field-spinner"></span>';
+      var arrow = wrap.querySelector('.v2-dropdown-arrow');
+      if (arrow) arrow.style.color = 'transparent';
+      setTimeout(function() {
+        wrap.classList.remove('v2-dropdown-loading');
+        wrap.classList.add('v2-dropdown-active');
+        valEl.innerHTML = '';
+        valEl.textContent = 'Select';
+        valEl.classList.add('v2-placeholder');
+        if (arrow) arrow.style.color = '#44485f';
+        var labelEl = document.getElementById(labelId);
+        if (labelEl) {
+          labelEl.style.color = '#44485f';
+          var icon = labelEl.querySelector('.v2-info-icon');
+          if (icon) icon.classList.remove('v2-info-disabled');
+        }
+        wrap.onclick = function(e) {
+          e.stopPropagation();
+          var menu = document.getElementById(menuId);
+          var isOpen = menu && menu.style.display !== 'none';
+          v2CloseAllMenus();
+          if (!isOpen && menu) menu.style.display = 'block';
+        };
+      }, 1500);
+    }
+
+    function v2PickField(e, valId, wrapId, value) {
+      e.stopPropagation();
+      var valEl = document.getElementById(valId);
+      if (valEl) { valEl.textContent = value; valEl.classList.remove('v2-placeholder'); }
+      v2CloseAllMenus();
+    }
+
+    document.addEventListener('click', v2CloseAllMenus);
+
+    function handleV2Images(input) {
+      var files = Array.from(input.files);
+      if (!files.length) return;
+      var container = document.getElementById('v2-images-container');
+      if (!container) return;
+      container.innerHTML = '';
+      files.forEach(function(file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var wrap = document.createElement('div');
+          wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:4px;';
+          var img = document.createElement('img');
+          img.src = e.target.result;
+          img.style.cssText = 'width:120px;height:90px;object-fit:cover;border-radius:6px;border:1px solid #a8caff;display:block;';
+          var nameEl = document.createElement('p');
+          nameEl.style.cssText = 'font-size:10px;color:#6B7280;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin:0;';
+          nameEl.textContent = file.name;
+          wrap.appendChild(img);
+          wrap.appendChild(nameEl);
+          container.appendChild(wrap);
+        };
+        reader.readAsDataURL(file);
+      });
+      input.value = '';
+    }
 
     function switchVersion(ver, btn) {
       document.querySelectorAll('.version-btn').forEach(function(b) { b.classList.remove('active'); });
