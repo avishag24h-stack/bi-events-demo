@@ -138,6 +138,8 @@
     .v2-table-inner td { padding: 12px 18px; font-size: 14px; color: #333853; font-weight: 400; border-bottom: 1px solid #DFE5EB; vertical-align: top; background: white; }
     .value-textarea { padding: 6px 12px; border: 1px solid #D6E6FE; border-radius: 6px; font-size: 14px; color: #000624; min-height: 48px; width: 174px; font-family: inherit; line-height: 18px; background: white; display: block; word-wrap: break-word; white-space: normal; }
     .dyn-checkbox-v2 { width: 16px; height: 16px; border: 1px solid #116DFF; border-radius: 4px; display: inline-block; background: white; }
+    .value-input-v2 { padding: 6px 12px; border: 1px solid #D6E6FE; border-radius: 6px; font-size: 14px; color: #000624; width: 174px; font-family: inherit; line-height: 18px; background: white; display: block; resize: none; outline: none; }
+    .value-input-v2:focus { border-color: #116DFF; }
 
     /* ─── V2 Confirm Modal ─── */
     .v2-modal-overlay { position:fixed;inset:0;background:rgba(0,6,36,0.7);z-index:1000;align-items:center;justify-content:center; }
@@ -618,6 +620,9 @@
       'v2-5': 'Splitting events by screens...'
     };
 
+    window.v2Images = [];
+    window.v2State = { src: '179 - Data Platform' };
+
     function stepAction(ver, toStep) {
       var body = document.getElementById(ver + '-body-' + toStep);
       var chev = document.getElementById(ver + '-chev-' + toStep);
@@ -628,6 +633,9 @@
         body.classList.add('open');
         if (chev) chev.classList.add('open');
       }
+
+      // Capture V2 state before showing loader
+      if (ver === 'v2') captureV2State();
 
       // Save original content and show loader
       var key = ver + '-' + toStep;
@@ -647,13 +655,21 @@
         body.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
 
-      // After 2s, restore content with fade
+      // After 2s, restore (dynamic for V2 steps 2/4/5, original for others)
       setTimeout(function() {
         body.style.opacity = '0';
         setTimeout(function() {
-          body.innerHTML = body.dataset.original;
+          if (ver === 'v2' && toStep === 2) {
+            body.innerHTML = buildV2Step2HTML();
+          } else if (ver === 'v2' && toStep === 4) {
+            body.innerHTML = buildV2Step4HTML();
+          } else if (ver === 'v2' && toStep === 5) {
+            body.innerHTML = buildV2Step5HTML();
+          } else {
+            body.innerHTML = body.dataset.original;
+            if (ver === 'v1') injectV1Images(body);
+          }
           body.style.opacity = '1';
-          if (ver === 'v1') injectV1Images(body);
           var note = document.getElementById(ver + '-note-' + toStep);
           if (note) note.classList.add('visible');
         }, 300);
@@ -741,14 +757,18 @@
     function handleV2Images(input) {
       var files = Array.from(input.files);
       if (!files.length) return;
+      window.v2Images = [];
       var container = document.getElementById('v2-images-container');
       if (!container) return;
       container.innerHTML = '';
-      files.forEach(function(file) {
+      files.forEach(function(file, idx) {
+        // Create wrapper immediately to preserve display order
+        var wrap = document.createElement('div');
+        wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:4px;';
+        container.appendChild(wrap);
         var reader = new FileReader();
         reader.onload = function(e) {
-          var wrap = document.createElement('div');
-          wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:4px;';
+          window.v2Images[idx] = { src: e.target.result, name: file.name };
           var img = document.createElement('img');
           img.src = e.target.result;
           img.style.cssText = 'width:120px;height:90px;object-fit:cover;border-radius:6px;border:1px solid #a8caff;display:block;';
@@ -757,11 +777,173 @@
           nameEl.textContent = file.name;
           wrap.appendChild(img);
           wrap.appendChild(nameEl);
-          container.appendChild(wrap);
         };
         reader.readAsDataURL(file);
       });
       input.value = '';
+    }
+
+    // ─── V2 Dynamic builder helpers ───
+
+    function captureV2State() {
+      var srcEl = document.querySelector('#v2-body-1 .v2-dropdown-filled .v2-dropdown-value');
+      window.v2State = { src: srcEl ? srcEl.textContent.trim() : '179 - Data Platform' };
+    }
+
+    function _esc(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    var _kiDelBtn = '<div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+
+    function _kiRow(text) {
+      return '<div class="ki-row"><input class="ki-input" value="' + _esc(text) + '" readonly>' + _kiDelBtn + '</div>';
+    }
+
+    // ─── Step 2 builder ───
+    function buildV2Step2HTML() {
+      var imgs = window.v2Images || [];
+      var ki1 = ['Filter Events: Click (Filter options)', 'Manage View: Click (Toolbar)', 'Create Event: Click (Button)'];
+      var ki2 = ['Edit Event: Click (Edit icon)', 'View Event Details: Click (Row)', 'Add Event: Click (Button)'];
+      var cardHTML = '';
+      if (imgs.length === 0) {
+        cardHTML += _v2ScreenCard('Screenshot name', null, ki1.concat(ki2));
+      } else if (imgs.length === 1) {
+        cardHTML += _v2ScreenCard(imgs[0].name, imgs[0].src, ki1.concat(ki2));
+      } else {
+        imgs.forEach(function(img, i) {
+          cardHTML += _v2ScreenCard(img.name, img.src, i % 2 === 0 ? ki1 : ki2);
+        });
+      }
+      cardHTML += '<div class="btn-row"><button class="btn-blue clickable" onclick="stepAction(\'v2\',3)">Unify Key Interactions</button></div>';
+      return cardHTML;
+    }
+
+    function _v2ScreenCard(rawName, imgSrc, kiList) {
+      var displayName = rawName.replace ? rawName.replace(/\.[^.]+$/, '') : rawName;
+      var imgInner = imgSrc ? '<img src="' + _esc(imgSrc) + '" style="width:100%;height:100%;object-fit:cover;display:block;">' : '';
+      var kiHTML = kiList.map(function(ki) { return _kiRow(ki); }).join('');
+      return '<div class="v2-screen-card">' +
+        '<div class="v2-screen-card-img">' + imgInner + '</div>' +
+        '<div class="v2-screen-card-content">' +
+        '<p style="font-size:18px;font-weight:700;color:#000624;margin-bottom:14px">' + _esc(displayName) + '</p>' +
+        '<p class="ki-label">Key interactions</p>' +
+        kiHTML +
+        '<p class="add-key">+ Add Key</p>' +
+        '</div></div>';
+    }
+
+    // ─── Step 4 builder ───
+    function buildV2Step4HTML() {
+      var src = (window.v2State && window.v2State.src) ? window.v2State.src : '179 - Data Platform';
+      var existingCard = _v2EventCard({
+        id: '68:106', name: 'add_event_click',
+        desc: "Clicking the 'Add Event' or 'Create Event' button to open the event creation flow.",
+        src: src, usertype: 'users, anonymous',
+        relatedKis: ['Create Event: Click (Button)', 'Manage View: Click (Toolbar)'],
+        fields: [
+          { input: 'draft_event', target: 'Event_hash', type: 'BOOL', desc: "{'false'}" },
+          { input: 'tab_name', target: 'Action_name', type: 'STRING', desc: "{'my_events', 'settings_m.." },
+          { input: 'button_name', target: 'Action_name', type: 'STRING', desc: "{'add_event', 'create_eve.." }
+        ]
+      });
+      var newCard = _v2EventCard({
+        id: '68:107', name: 'event_details_view',
+        desc: "Opening the event details panel to view or edit a specific event's configuration.",
+        src: src, usertype: 'users, anonymous',
+        relatedKis: ['View Event Details: Click (Row)', 'Edit Event: Click (Edit icon)'],
+        fields: [
+          { input: 'event_id', target: 'Event_id', type: 'STRING', desc: "Unique event identifier" },
+          { input: 'view_type', target: 'Action_name', type: 'STRING', desc: "{'details', 'edit'}" },
+          { input: 'source_tab', target: 'Action_name', type: 'STRING', desc: "{'my_events', 'all_events'}" }
+        ]
+      });
+      return '<p class="section-title">Existing events (1) <span class="info-icon">i</span></p>' +
+        existingCard +
+        '<p class="section-title" style="margin-top:28px">New events (1) <span class="info-icon">i</span></p>' +
+        '<p style="font-size:13px;color:#6B7280;margin-bottom:16px">New events id is temporary until you\'ll approve the events.</p>' +
+        newCard +
+        '<div class="btn-row"><button class="btn-blue clickable" onclick="stepAction(\'v2\',5)">Split by Screens</button></div>';
+    }
+
+    function _v2EventCard(ev) {
+      var relTags = ev.relatedKis.map(function(k) { return '<span class="related-tag">' + _esc(k) + '</span>'; }).join('');
+      var rows = ev.fields.map(function(f) {
+        return '<tr><td>' + _esc(f.input) + '</td><td>' + _esc(f.target) + '</td><td>' + _esc(f.type) + '</td><td>' + _esc(f.desc) + '</td><td>N/A</td><td>No</td></tr>';
+      }).join('');
+      return '<div class="event-card-v2">' +
+        '<div class="related-bar"><span class="rlabel">Related Key interactions:</span>' + relTags + '</div>' +
+        '<div class="event-divider"></div>' +
+        '<div class="event-title-row"><div class="event-title-left">' +
+        '<div class="event-title-badge-row"><span class="event-id-badge">' + _esc(ev.id) + '</span><div class="event-title-divider"></div><span class="event-name-v2">' + _esc(ev.name) + '</span></div>' +
+        '<p class="event-desc">' + _esc(ev.desc) + '</p></div><span class="three-dots">&#8943;</span></div>' +
+        '<p class="event-usertype"><span class="ut-label">Src:</span> ' + _esc(ev.src) + '</p>' +
+        '<p class="event-usertype"><span class="ut-label">User type:</span> ' + _esc(ev.usertype) + '</p>' +
+        '<p class="event-fields-label">Fields:</p>' +
+        '<table class="v2-table"><thead><tr><th>Input name</th><th>Target name</th><th>Type</th><th>Description</th><th>Added date</th><th>Mandatory</th></tr></thead>' +
+        '<tbody>' + rows + '</tbody></table>' +
+        '<p class="see-more">See more fields (3) ↓</p>' +
+        '</div>';
+    }
+
+    // ─── Step 5 builder ───
+    function buildV2Step5HTML() {
+      var imgs = window.v2Images || [];
+      var src = (window.v2State && window.v2State.src) ? window.v2State.src : '179 - Data Platform';
+      var html = '';
+      if (imgs.length === 0) {
+        html += _v2Step5Container('Screenshot name', null, src);
+      } else {
+        imgs.forEach(function(img) { html += _v2Step5Container(img.name, img.src, src); });
+      }
+      html += '<div class="btn-row" style="margin-top:32px"><button class="btn-confirm" onclick="showConfirmModal()">Confirm &amp; Finish</button></div>';
+      return html;
+    }
+
+    function _v2Step5Container(rawName, imgSrc, src) {
+      var displayName = rawName && rawName.replace ? rawName.replace(/\.[^.]+$/, '') : rawName;
+      var imgArea = imgSrc
+        ? '<div class="mountain-placeholder"><img src="' + _esc(imgSrc) + '" alt="Screenshot" style="width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;"></div>'
+        : '<div class="mountain-placeholder" style="display:flex;align-items:center;justify-content:center;"><span style="color:#9CA3AF;font-size:13px">No screenshot uploaded</span></div>';
+      var tableFields = [
+        { input: 'draft_event', target: 'Event_hash', type: 'BOOL', desc: "{'false', 'true'}", value: 'false' },
+        { input: 'tab_name', target: 'Action_name', type: 'STRING', desc: "{'my_events', 'settings_main'}", value: 'my_events' },
+        { input: 'button_name', target: 'Action_name', type: 'STRING', desc: "{'add_event', 'view_details'}", value: 'view_details' }
+      ];
+      var tableRows = tableFields.map(function(r) {
+        return '<tr><td>' + _esc(r.input) + '</td><td>' + _esc(r.target) + '</td><td>' + _esc(r.type) + '</td>' +
+          '<td>' + _esc(r.desc) + '</td>' +
+          '<td><textarea class="value-input-v2" rows="2">' + _esc(r.value) + '</textarea></td>' +
+          '<td><span class="dyn-checkbox-v2"></span></td></tr>';
+      }).join('');
+      return '<div class="screenshot-container-v2" style="margin-bottom:24px">' +
+        '<div class="screenshot-header-v2"><span>' + _esc(displayName) + '</span>' +
+        '<div class="chevron-circle open" style="width:30px;height:30px"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>' +
+        '<div class="screenshot-header-divider"></div>' +
+        '<div class="screenshot-img-area">' + imgArea + '</div>' +
+        '<div class="accordion-row-v2">' +
+        '<div class="arrow-right"></div>' +
+        '<span style="font-weight:500">Create Event</span>' +
+        '<div class="vert-div"></div>' +
+        '<span style="font-weight:500">add_event_click</span>' +
+        '<span class="badge-existing">Existing event</span>' +
+        '</div>' +
+        '<div class="accordion-row-v2" style="border-bottom:none">' +
+        '<div class="arrow-down"></div>' +
+        '<span style="font-weight:500">View Event Details</span>' +
+        '<div class="vert-div"></div>' +
+        '<span style="font-weight:500">event_details_view</span>' +
+        '<span class="badge-new">New event</span>' +
+        '</div>' +
+        '<div class="accordion-expanded-v2">' +
+        '<table class="v2-table-inner"><thead><tr>' +
+        '<th>Input name</th><th>Target name</th><th>Type</th><th>Description</th>' +
+        '<th>Value</th><th>Static value <span class="info-icon" style="font-size:8px">i</span></th>' +
+        '</tr></thead><tbody>' + tableRows + '</tbody></table>' +
+        '<p style="color:#116DFF;font-size:14px;font-weight:500;text-align:center;margin-top:12px;padding:12px 0">See more fields (3) &#x2193;</p>' +
+        '</div>' +
+        '<div style="height:1px;background:#DFE5EB"></div>' +
+        '</div>';
     }
 
     function showConfirmModal() {
