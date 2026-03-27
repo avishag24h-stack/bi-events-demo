@@ -41,7 +41,8 @@
     .btn-blue.clickable:hover { opacity: 0.85; }
     .btn-outline { background: transparent; color: #2563EB; border: 1.5px solid #2563EB; border-radius: 24px; padding: 12px 28px; font-size: 14px; font-weight: 600; cursor: default; pointer-events: none; }
     .btn-row { display: flex; justify-content: center; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
-    .btn-confirm { background: #116DFF; color: white; border: none; border-radius: 100px; padding: 6px 24px; font-size: 16px; font-weight: 500; cursor: default; pointer-events: none; line-height: 24px; }
+    .btn-confirm { background: #116DFF; color: white; border: none; border-radius: 100px; padding: 6px 24px; font-size: 16px; font-weight: 500; cursor: pointer; pointer-events: auto; line-height: 24px; transition: opacity 0.2s ease; }
+    .btn-confirm:hover { opacity: 0.88; }
 
     .badge-green { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 500; color: white; background: #16A34A; }
     .badge-regen { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; padding: 6px 18px; height: 30px; border-radius: 1000px; font-weight: 500; color: #116DFF; background: white; border: 1px solid #D6E6FE; font-family: inherit; }
@@ -137,6 +138,31 @@
     .v2-table-inner td { padding: 12px 18px; font-size: 14px; color: #333853; font-weight: 400; border-bottom: 1px solid #DFE5EB; vertical-align: top; background: white; }
     .value-textarea { padding: 6px 12px; border: 1px solid #D6E6FE; border-radius: 6px; font-size: 14px; color: #000624; min-height: 48px; width: 174px; font-family: inherit; line-height: 18px; background: white; display: block; word-wrap: break-word; white-space: normal; }
     .dyn-checkbox-v2 { width: 16px; height: 16px; border: 1px solid #116DFF; border-radius: 4px; display: inline-block; background: white; }
+
+    /* ─── V2 Confirm Modal ─── */
+    .v2-modal-overlay { position:fixed;inset:0;background:rgba(0,6,36,0.7);z-index:1000;align-items:center;justify-content:center; }
+    .v2-modal { background:white;border-radius:8px;width:600px;max-width:calc(100vw - 32px);box-shadow:0px 3px 24px rgba(0,6,36,0.2),0px 8px 8px rgba(0,6,36,0.1);display:flex;flex-direction:column;max-height:calc(100vh - 40px); }
+    .v2-modal-header { display:flex;align-items:center;justify-content:space-between;padding:20px 28px;border-bottom:1px solid #DFE5EB;flex-shrink:0; }
+    .v2-modal-title { font-size:17px;font-weight:700;color:#000624; }
+    .v2-modal-close { width:30px;height:30px;border-radius:1000px;border:1px solid #DFE5EB;background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0; }
+    .v2-modal-close:hover { background:#F3F4F6; }
+    .v2-modal-banner { display:flex;align-items:center;gap:8px;padding:10px 28px;background:#E1F4EB;border-bottom:1px solid #87CEA5;font-size:13px;color:#14532D;font-weight:500;flex-shrink:0; }
+    .v2-modal-body { padding:24px 28px 0;overflow-y:auto;flex:1; }
+    .v2-modal-section { display:flex;gap:20px;align-items:flex-start;margin-bottom:20px; }
+    .v2-modal-illus { width:88px;flex-shrink:0;display:flex;align-items:flex-start;justify-content:center;padding-top:4px; }
+    .v2-modal-section-content { flex:1; }
+    .v2-modal-radio { display:inline-flex;align-items:center;gap:8px;cursor:pointer; }
+    .v2-radio-dot { width:18px;height:18px;border-radius:50%;border:2px solid #D1D5DB;flex-shrink:0;position:relative;display:inline-block; }
+    .v2-radio-dot.selected { border-color:#116DFF; }
+    .v2-radio-dot.selected::after { content:'';position:absolute;top:3px;left:3px;width:8px;height:8px;border-radius:50%;background:#116DFF; }
+    .v2-modal-copy-btn { background:white;color:#116DFF;border:1.5px solid #116DFF;border-radius:100px;padding:0 18px;font-size:14px;font-weight:500;height:30px;cursor:pointer;display:inline-flex;align-items:center; }
+    .v2-modal-copy-btn:hover { background:#EEF4FF; }
+    .v2-modal-note { margin:0 28px;padding:12px 0 20px;font-size:13px;color:#44485F;line-height:1.6;flex-shrink:0; }
+    .v2-modal-footer { display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:16px 28px;border-top:1px solid #DFE5EB;flex-shrink:0; }
+    .v2-modal-cancel { background:white;color:#116DFF;border:1.5px solid #D6E6FE;border-radius:100px;padding:8px 24px;font-size:14px;font-weight:500;cursor:pointer; }
+    .v2-modal-cancel:hover { background:#F0F7FF; }
+    .v2-modal-done { background:#116DFF;color:white;border:none;border-radius:100px;padding:8px 28px;font-size:14px;font-weight:500;cursor:pointer; }
+    .v2-modal-done:hover { opacity:0.88; }
 
     /* ─── V1 specific ─── */
     .toolbar { display: flex; align-items: center; gap: 2px; padding: 6px 8px; background: #FAFAFA; border-bottom: 1px solid #E5E7EB; border-radius: 6px 6px 0 0; flex-wrap: wrap; font-size: 13px; }
@@ -438,12 +464,76 @@
         </div>
         <div style="height:1px;background:#DFE5EB"></div>
       </div>
-      <div class="btn-row" style="margin-top:32px"><button class="btn-confirm">Confirm & Finish</button></div>
+      <div class="btn-row" style="margin-top:32px"><button class="btn-confirm" onclick="showConfirmModal()">Confirm &amp; Finish</button></div>
     </div></div>
 
   </div></div>
 
   </div><!-- /version-wrapper -->
+
+  <!-- V2 Confirm & Finish Modal -->
+  <div id="v2-confirm-modal-overlay" class="v2-modal-overlay" style="display:none" onclick="if(event.target===this)closeConfirmModal()">
+    <div class="v2-modal">
+      <!-- Header -->
+      <div class="v2-modal-header">
+        <span class="v2-modal-title">Review and confirm</span>
+        <button class="v2-modal-close" onclick="closeConfirmModal()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12 4L4 12M4 4l8 8" stroke="#44485F" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <!-- Green success banner -->
+      <div class="v2-modal-banner">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#16A34A" stroke-width="1.4"/><path d="M5 8.5l2 2 4-4" stroke="#16A34A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Link to your event brief was already copied to your clipboard</span>
+      </div>
+      <!-- Body -->
+      <div class="v2-modal-body">
+        <!-- Section 1: BI events summary + publish option -->
+        <div class="v2-modal-section">
+          <div class="v2-modal-illus">
+            <svg width="88" height="88" viewBox="0 0 88 88" fill="none"><circle cx="44" cy="44" r="44" fill="#EEF4FF"/><rect x="24" y="20" width="30" height="38" rx="3" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/><rect x="31" y="15" width="16" height="8" rx="4" fill="#3B82F6"/><line x1="30" y1="32" x2="48" y2="32" stroke="#93C5FD" stroke-width="1.5" stroke-linecap="round"/><line x1="30" y1="40" x2="48" y2="40" stroke="#93C5FD" stroke-width="1.5" stroke-linecap="round"/><line x1="30" y1="48" x2="42" y2="48" stroke="#93C5FD" stroke-width="1.5" stroke-linecap="round"/><circle cx="59" cy="59" r="16" fill="#116DFF"/><path d="M53 59.5l3.5 3.5 7-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="v2-modal-section-content">
+            <p style="font-size:15px;font-weight:700;color:#000624;margin-bottom:8px">Your BI events:</p>
+            <p style="font-size:14px;color:#44485F;margin-bottom:2px">2 Existing events</p>
+            <p style="font-size:14px;color:#44485F;margin-bottom:14px">4 New events</p>
+            <div style="height:1px;background:#DFE5EB;margin-bottom:14px"></div>
+            <p style="font-size:14px;font-weight:700;color:#000624;margin-bottom:12px">Do you want to publish new events?</p>
+            <div style="display:flex;gap:20px;align-items:center">
+              <label class="v2-modal-radio">
+                <span class="v2-radio-dot selected"></span>
+                <span style="font-size:14px;color:#000624">Publish</span>
+              </label>
+              <label class="v2-modal-radio">
+                <span class="v2-radio-dot"></span>
+                <span style="font-size:14px;color:#6B7280">Save as draft</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <!-- Divider -->
+        <div style="height:1px;background:#DFE5EB;margin:0 -28px 0 -28px"></div>
+        <!-- Section 2: Copy link -->
+        <div class="v2-modal-section" style="padding-top:20px">
+          <div class="v2-modal-illus">
+            <svg width="88" height="88" viewBox="0 0 88 88" fill="none"><circle cx="44" cy="44" r="44" fill="#EEF4FF"/><rect x="12" y="22" width="52" height="36" rx="5" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/><rect x="12" y="22" width="52" height="11" rx="5" fill="#3B82F6"/><circle cx="20" cy="27.5" r="2.5" fill="white" opacity="0.8"/><circle cx="28" cy="27.5" r="2.5" fill="white" opacity="0.8"/><circle cx="36" cy="27.5" r="2.5" fill="white" opacity="0.6"/><rect x="20" y="39" width="28" height="4" rx="2" fill="#BFDBFE"/><rect x="20" y="47" width="18" height="4" rx="2" fill="#BFDBFE"/><path d="M72 16l1.2 2.8 2.8 1.2-2.8 1.2-1.2 2.8-1.2-2.8-2.8-1.2 2.8-1.2z" fill="#F59E0B"/><path d="M66 10l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8z" fill="#FCD34D"/></svg>
+          </div>
+          <div class="v2-modal-section-content">
+            <p style="font-size:15px;font-weight:700;color:#000624;margin-bottom:8px">Copy link of your event brief</p>
+            <p style="font-size:13px;color:#44485F;margin-bottom:16px;line-height:1.5">Easily connect your colleague with this BI event brief</p>
+            <button class="v2-modal-copy-btn">Copy Link</button>
+          </div>
+        </div>
+      </div>
+      <!-- Note -->
+      <div class="v2-modal-note"><b>Note:</b> Once you click 'Done', this window will close, the steps will reset, and you can start a new scan if needed.</div>
+      <!-- Footer -->
+      <div class="v2-modal-footer">
+        <button class="v2-modal-cancel" onclick="closeConfirmModal()">Cancel</button>
+        <button class="v2-modal-done" onclick="closeConfirmModal()">Done</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     window.v1Images = [];
@@ -672,6 +762,16 @@
         reader.readAsDataURL(file);
       });
       input.value = '';
+    }
+
+    function showConfirmModal() {
+      var o = document.getElementById('v2-confirm-modal-overlay');
+      if (o) { o.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+    }
+
+    function closeConfirmModal() {
+      var o = document.getElementById('v2-confirm-modal-overlay');
+      if (o) { o.style.display = 'none'; document.body.style.overflow = ''; }
     }
 
     function switchVersion(ver, btn) {
