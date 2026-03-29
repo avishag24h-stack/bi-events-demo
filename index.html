@@ -153,10 +153,12 @@
     .v2-modal-title { font-size:17px;font-weight:700;color:#000624; }
     .v2-modal-close { width:30px;height:30px;border-radius:1000px;border:1px solid #DFE5EB;background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0; }
     .v2-modal-close:hover { background:#F3F4F6; }
-    .v2-modal-banner { display:flex;align-items:center;gap:8px;padding:10px 28px;background:#E1F4EB;border-bottom:1px solid #87CEA5;font-size:13px;color:#14532D;font-weight:500;flex-shrink:0; }
-    .v2-modal-body { padding:24px 28px 0;overflow-y:auto;flex:1; }
-    .v2-modal-section { display:flex;gap:20px;align-items:flex-start;margin-bottom:20px; }
-    .v2-modal-illus { width:88px;flex-shrink:0;display:flex;align-items:flex-start;justify-content:center;padding-top:4px; }
+    .v2-modal-banner { display:flex;align-items:center;gap:8px;padding:10px 14px;background:#E1F4EB;border:1px solid #87CEA5;border-radius:6px;font-size:13px;color:#14532D;font-weight:500;flex-shrink:0;margin:16px 28px 0; }
+    .v2-modal-banner-close { margin-left:auto;background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;color:#6B8C7A;flex-shrink:0; }
+    .v2-modal-banner-close:hover { color:#14532D; }
+    .v2-modal-body { padding:20px 28px 0;overflow-y:auto;flex:1; }
+    .v2-modal-section { display:flex;gap:24px;align-items:center;margin-bottom:20px; }
+    .v2-modal-illus { width:160px;flex-shrink:0;display:flex;align-items:center;justify-content:center; }
     .v2-modal-section-content { flex:1; }
     .v2-modal-radio { display:inline-flex;align-items:center;gap:8px;cursor:pointer; }
     .v2-radio-dot { width:18px;height:18px;border-radius:50%;border:2px solid #D1D5DB;flex-shrink:0;position:relative;display:inline-block; }
@@ -501,13 +503,43 @@
       <div class="v2-modal-banner">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#16A34A" stroke-width="1.4"/><path d="M5 8.5l2 2 4-4" stroke="#16A34A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span>Link to your event brief was already copied to your clipboard</span>
+        <button class="v2-modal-banner-close" onclick="this.closest('.v2-modal-banner').style.display='none'">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3l6 6" stroke="#6B8C7A" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
       </div>
       <!-- Body -->
       <div class="v2-modal-body">
         <!-- Section 1: BI events summary + publish option -->
         <div class="v2-modal-section">
           <div class="v2-modal-illus">
-            <svg width="88" height="88" viewBox="0 0 88 88" fill="none"><circle cx="44" cy="44" r="44" fill="#EEF4FF"/><rect x="24" y="20" width="30" height="38" rx="3" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/><rect x="31" y="15" width="16" height="8" rx="4" fill="#3B82F6"/><line x1="30" y1="32" x2="48" y2="32" stroke="#93C5FD" stroke-width="1.5" stroke-linecap="round"/><line x1="30" y1="40" x2="48" y2="40" stroke="#93C5FD" stroke-width="1.5" stroke-linecap="round"/><line x1="30" y1="48" x2="42" y2="48" stroke="#93C5FD" stroke-width="1.5" stroke-linecap="round"/><circle cx="59" cy="59" r="16" fill="#116DFF"/><path d="M53 59.5l3.5 3.5 7-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="160" height="155" viewBox="0 0 174 168" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clipNE)">
+<path d="M117.942 125H57L62.0583 50H123L117.942 125Z" fill="#C2E2FF"/>
+<path d="M113.664 68H82.0243L82.3599 63H114L113.664 68Z" fill="white"/>
+<path d="M78.1891 68H68.6012L68.9368 63H78.5247L78.1891 68Z" fill="white"/>
+<path d="M112.859 80H67.7958L68.1314 75H113.195L112.859 80Z" fill="white"/>
+<path d="M86.1758 92H67L67.326 87H86.5018L86.1758 92Z" fill="white"/>
+<path d="M90.1649 93.9625L90.7988 84.9648L91.7964 85.0351L91.1624 94.0328L90.1649 93.9625Z" fill="#192C55"/>
+<mask id="maskNE" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="33" y="27" width="114" height="114">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M127.971 29.3601C121.209 28.0037 112.945 29.0195 104.048 32.2007L104.048 32.2007C100.323 33.5317 96.4852 35.2415 92.6048 37.311L92.1342 36.4287C96.0539 34.3382 99.9362 32.6079 103.711 31.259C112.714 28.0402 121.17 26.976 128.168 28.3796C132.689 29.2859 136.623 31.2264 139.684 34.2969C144.713 39.3267 146.71 46.6665 146.092 55.1785C145.474 63.6907 142.241 73.4237 136.747 83.3323L136.747 83.3324C131.703 92.4259 124.744 101.683 116.123 110.303C102.428 123.999 87.1079 133.511 73.3901 137.803C59.6979 142.088 47.4586 141.206 40.116 133.863C32.5629 126.31 31.8443 113.575 36.5651 99.3919L37.5139 99.7078C32.8348 113.765 33.6762 126.009 40.8231 133.156C47.7705 140.104 59.5312 141.092 73.0915 136.849C86.6261 132.614 101.811 123.201 115.416 109.596C123.975 101.037 130.876 91.8538 135.872 82.8473C141.318 73.0259 144.49 63.434 145.095 55.1061C145.699 46.7785 143.736 39.7636 138.976 35.0034L138.975 35.0028C136.076 32.0933 132.33 30.2338 127.971 29.3601L127.971 29.3601Z" fill="#FF0000"/>
+</mask>
+<g mask="url(#maskNE)">
+<g filter="url(#fNE0)"><circle cx="49" cy="123" r="39" fill="#0021FF"/></g>
+<g filter="url(#fNE1)"><circle cx="106" cy="101" r="42" fill="#116DFF"/></g>
+<g filter="url(#fNE2)"><ellipse cx="134" cy="61.5" rx="29" ry="29.5" fill="#5FF2AE"/></g>
+</g>
+<path d="M136.5 116.665C136.748 117.579 137.227 118.407 137.907 119.088V119.089C138.584 119.773 139.419 120.252 140.335 120.5C139.419 120.75 138.591 121.234 137.911 121.907C137.227 122.584 136.747 123.419 136.499 124.335C136.249 123.419 135.766 122.591 135.093 121.911C134.416 121.227 133.58 120.747 132.664 120.499C133.58 120.249 134.409 119.766 135.089 119.093C135.773 118.416 136.252 117.581 136.5 116.665Z" fill="#C2E2FF" stroke="#C2E2FF"/>
+<path d="M38 100C39.1046 100 40 99.1046 40 98C40 96.8954 39.1046 96 38 96C36.8954 96 36 96.8954 36 98C36 99.1046 36.8954 100 38 100Z" fill="#116DFF"/>
+<path d="M46.35 76.65C45.35 75.65 44.71 74.39 44.49 73H43.51C43.29 74.39 42.65 75.66 41.65 76.65C40.65 77.64 39.39 78.29 38 78.51V79.49C39.39 79.71 40.66 80.35 41.65 81.35C42.64 82.35 43.29 83.61 43.51 85H44.49C44.71 83.61 45.35 82.34 46.35 81.35C47.35 80.36 48.61 79.71 50 79.49V78.51C48.61 78.29 47.34 77.65 46.35 76.65Z" fill="#116DFF"/>
+<path d="M131.35 38.65C130.35 37.65 129.71 36.39 129.49 35H128.51C128.29 36.39 127.65 37.66 126.65 38.65C125.65 39.64 124.39 40.29 123 40.51V41.49C124.39 41.71 125.66 42.35 126.65 43.35C127.64 44.35 128.29 45.61 128.51 47H129.49C129.71 45.61 130.35 44.34 131.35 43.35C132.35 42.36 133.61 41.71 135 41.49V40.51C133.61 40.29 132.34 39.65 131.35 38.65Z" fill="#116DFF"/>
+</g>
+<defs>
+<filter id="fNE0" x="8" y="82" width="82" height="82" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_NE"/></filter>
+<filter id="fNE1" x="52" y="47" width="108" height="108" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="6" result="effect1_foregroundBlur_NE"/></filter>
+<filter id="fNE2" x="85" y="12" width="98" height="99" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="10" result="effect1_foregroundBlur_NE"/></filter>
+<clipPath id="clipNE"><rect width="120" height="120" fill="white" transform="translate(30 24)"/></clipPath>
+</defs>
+</svg>
           </div>
           <div class="v2-modal-section-content">
             <p style="font-size:15px;font-weight:700;color:#000624;margin-bottom:8px">Your BI events:</p>
@@ -528,11 +560,43 @@
           </div>
         </div>
         <!-- Divider -->
-        <div style="height:1px;background:#DFE5EB;margin:0 -28px 0 -28px"></div>
+        <div style="height:1px;background:#DFE5EB;margin:0 -28px 20px -28px"></div>
         <!-- Section 2: Copy link -->
-        <div class="v2-modal-section" style="padding-top:20px">
+        <div class="v2-modal-section">
           <div class="v2-modal-illus">
-            <svg width="88" height="88" viewBox="0 0 88 88" fill="none"><circle cx="44" cy="44" r="44" fill="#EEF4FF"/><rect x="12" y="22" width="52" height="36" rx="5" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/><rect x="12" y="22" width="52" height="11" rx="5" fill="#3B82F6"/><circle cx="20" cy="27.5" r="2.5" fill="white" opacity="0.8"/><circle cx="28" cy="27.5" r="2.5" fill="white" opacity="0.8"/><circle cx="36" cy="27.5" r="2.5" fill="white" opacity="0.6"/><rect x="20" y="39" width="28" height="4" rx="2" fill="#BFDBFE"/><rect x="20" y="47" width="18" height="4" rx="2" fill="#BFDBFE"/><path d="M72 16l1.2 2.8 2.8 1.2-2.8 1.2-1.2 2.8-1.2-2.8-2.8-1.2 2.8-1.2z" fill="#F59E0B"/><path d="M66 10l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8z" fill="#FCD34D"/></svg>
+            <svg width="160" height="155" viewBox="0 0 174 168" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clipCL)">
+<path d="M132 55H48V120H132V55Z" fill="#C2E2FF"/>
+<path d="M129.944 41.0462C129.12 40.2222 128.583 39.161 128.396 38H127.584C127.397 39.161 126.873 40.2097 126.036 41.0462C125.2 41.8826 124.151 42.407 122.99 42.5943V43.4057C124.151 43.593 125.2 44.1174 126.036 44.9538C126.873 45.7903 127.397 46.839 127.584 48H128.396C128.583 46.839 129.107 45.7903 129.944 44.9538C130.78 44.1174 131.829 43.593 132.99 43.4057V42.5943C131.829 42.407 130.78 41.8826 129.944 41.0462Z" fill="#C2E2FF"/>
+<path d="M47.9538 42.0462C47.1298 41.2222 46.593 40.161 46.4057 39H45.5943C45.407 40.161 44.8826 41.2097 44.0462 42.0462C43.2097 42.8826 42.161 43.407 41 43.5943V44.4057C42.161 44.593 43.2097 45.1174 44.0462 45.9538C44.8826 46.7903 45.407 47.839 45.5943 49H46.4057C46.593 47.839 47.1174 46.7903 47.9538 45.9538C48.7903 45.1174 49.839 44.593 51 44.4057V43.5943C49.839 43.407 48.7903 42.8826 47.9538 42.0462Z" fill="#C2E2FF"/>
+<path d="M95 70H55V109H95V70Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M115 80H104V79H115V80Z" fill="#192C55"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M124 85H104V84H124V85Z" fill="#192C55"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M124 90H104V89H124V90Z" fill="#192C55"/>
+<path d="M116.5 95H106.5C105.119 95 104 96.1193 104 97.5C104 98.8807 105.119 100 106.5 100H116.5C117.881 100 119 98.8807 119 97.5C119 96.1193 117.881 95 116.5 95Z" fill="#28BF9A"/>
+<path d="M75 85C82.1797 85 88 82.7614 88 80C88 77.2386 82.1797 75 75 75C67.8203 75 62 77.2386 62 80C62 82.7614 67.8203 85 75 85Z" fill="#C2E2FF"/>
+<path d="M75 104C82.1797 104 88 101.761 88 99C88 96.2386 82.1797 94 75 94C67.8203 94 62 96.2386 62 99C62 101.761 67.8203 104 75 104Z" fill="#C2E2FF"/>
+<path d="M75 81L63 89.5052L75 98L87 89.5052L75 81Z" fill="#C2E2FF"/>
+<mask id="maskCL" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="34" y="27" width="113" height="114">
+<path d="M38.3217 96.9203C33.1417 111.74 33.8517 125.03 41.6417 132.83C56.1717 147.36 89.8117 137.28 116.782 110.31C143.752 83.3403 153.832 49.7003 139.302 35.1703C127.872 23.7403 104.612 27.5403 82.0717 42.8203" stroke="#192C55" stroke-width="1.33323" stroke-miterlimit="10"/>
+</mask>
+<g mask="url(#maskCL)">
+<g filter="url(#fCL0)"><circle cx="135.472" cy="45" r="39" fill="#0021FF"/></g>
+<g filter="url(#fCL1)"><circle cx="123.472" cy="97" r="42" fill="#116DFF"/></g>
+<g filter="url(#fCL2)"><ellipse cx="65" cy="135.5" rx="29" ry="29.5" fill="#5FF2AE"/></g>
+</g>
+<path d="M132 55H48V61H132V55Z" fill="#116DFF"/>
+<path d="M69.8176 37.1824C68.4042 35.7691 67.4881 33.9892 67.1871 32H65.8129C65.5119 33.9761 64.5828 35.756 63.1824 37.1824C61.7691 38.6089 59.9892 39.5119 58 39.8129V41.1871C59.9761 41.4881 61.756 42.4172 63.1824 43.8176C64.6089 45.2309 65.5119 47.0108 65.8129 49H67.1871C67.4881 47.0239 68.4172 45.244 69.8176 43.8176C71.2309 42.3911 73.0108 41.4881 75 41.1871V39.8129C73.0239 39.5119 71.244 38.5828 69.8176 37.1824Z" fill="#116DFF"/>
+<path d="M118.037 129.963C116.961 128.886 116.263 127.514 116.026 126H114.974C114.725 127.514 114.051 128.874 112.963 129.963C111.874 131.051 110.514 131.737 109 131.974V133.026C110.514 133.275 111.874 133.949 112.963 135.037C114.051 136.126 114.737 137.486 114.974 139H116.026C116.275 137.486 116.949 136.126 118.037 135.037C119.126 133.949 120.486 133.263 122 133.026V131.974C120.486 131.725 119.126 131.051 118.037 129.963Z" fill="#116DFF"/>
+<path d="M98 36C99.1 36 100 35.1 100 34C100 32.9 99.1 32 98 32C96.9 32 96 32.9 96 34C96 35.1 96.9 36 98 36Z" fill="#116DFF"/>
+</g>
+<defs>
+<filter id="fCL0" x="94.4717" y="4" width="82" height="82" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_CL"/></filter>
+<filter id="fCL1" x="69.4717" y="43" width="108" height="108" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="6" result="effect1_foregroundBlur_CL"/></filter>
+<filter id="fCL2" x="16" y="86" width="98" height="99" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="10" result="effect1_foregroundBlur_CL"/></filter>
+<clipPath id="clipCL"><rect width="120" height="120" fill="white" transform="translate(30 24)"/></clipPath>
+</defs>
+</svg>
           </div>
           <div class="v2-modal-section-content">
             <p style="font-size:15px;font-weight:700;color:#000624;margin-bottom:8px">Copy link of your event brief</p>
