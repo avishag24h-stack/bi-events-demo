@@ -34,6 +34,8 @@
 
     .step-body { border-top: 1px solid #E5E7EB; padding: 28px; display: none; transition: opacity 0.3s ease; }
     .step-body.open { display: block; }
+    #v2-content .step-body.open { height: 800px; overflow-y: auto; box-sizing: border-box; }
+    .v2-upload-spinner { width: 28px; height: 28px; border: 3px solid #D6E6FE; border-top-color: #116DFF; border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     .btn-blue { background: #2563EB; color: white; border: none; border-radius: 24px; padding: 12px 28px; font-size: 14px; font-weight: 600; cursor: default; pointer-events: none; }
@@ -92,9 +94,9 @@
     .screenshot-label { font-size: 17px; font-weight: 700; color: #111827; margin-bottom: 14px; }
 
     /* V2 Screen cards (Step 2) */
-    .v2-screen-card { display: flex; background: white; border-radius: 12px; overflow: hidden; height: 300px; box-shadow: 0px 0px 6px rgba(0,6,36,0.1), 0px 2px 4px rgba(0,6,36,0.05); margin-bottom: 24px; }
-    .v2-screen-card-img { width: min(388px, 42%); flex-shrink: 0; background: #c3c7cc; align-self: stretch; border-radius: 8px 0 0 8px; }
-    .v2-screen-card-content { flex: 1; padding: 24px; overflow-y: auto; }
+    .v2-screen-card { display: flex; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0px 0px 6px rgba(0,6,36,0.1), 0px 2px 4px rgba(0,6,36,0.05); margin-bottom: 24px; }
+    .v2-screen-card-img { width: min(388px, 42%); flex-shrink: 0; background: #c3c7cc; align-self: stretch; border-radius: 8px 0 0 8px; min-height: 260px; }
+    .v2-screen-card-content { flex: 1; padding: 24px; }
 
     /* Event cards V2 */
     .event-card-v2 { border: 1px solid #A8CAFF; border-radius: 8px; padding: 20px; margin-bottom: 16px; background: white; box-shadow: 0 0 6px 0 rgba(0,6,36,0.1), 0 2px 4px 0 rgba(0,6,36,0.05); }
@@ -323,6 +325,7 @@
             <span class="v2-dropdown-value v2-placeholder" id="v2-owner-val">Select</span>
             <span class="v2-dropdown-arrow">▾</span>
             <div class="v2-dropdown-menu" id="v2-owner-menu" style="display:none">
+              <div class="v2-dropdown-item" style="color:#9CA3AF" onclick="v2SelectOwner(event,'')">— Empty —</div>
               <div class="v2-dropdown-item" onclick="v2SelectOwner(event,'Data product')">Data product</div>
               <div class="v2-dropdown-item" onclick="v2SelectOwner(event,'Data explorer admins')">Data explorer admins</div>
             </div>
@@ -334,6 +337,7 @@
             <span class="v2-dropdown-value v2-placeholder" id="v2-domain-val">Select</span>
             <span class="v2-dropdown-arrow" style="color:#868aa5">▾</span>
             <div class="v2-dropdown-menu" id="v2-domain-menu" style="display:none">
+              <div class="v2-dropdown-item" style="color:#9CA3AF" onclick="v2PickField(event,'v2-domain-val','v2-domain-wrap','')">— Empty —</div>
               <div class="v2-dropdown-item" onclick="v2PickField(event,'v2-domain-val','v2-domain-wrap','Data platform')">Data platform</div>
               <div class="v2-dropdown-item" onclick="v2PickField(event,'v2-domain-val','v2-domain-wrap','Data dev')">Data dev</div>
               <div class="v2-dropdown-footer" onclick="event.stopPropagation()"><span style="color:#116DFF;font-size:13px;font-weight:500">+ Go to Create Domain</span></div>
@@ -346,6 +350,7 @@
             <span class="v2-dropdown-value v2-placeholder" id="v2-product-val">Select</span>
             <span class="v2-dropdown-arrow" style="color:#868aa5">▾</span>
             <div class="v2-dropdown-menu" id="v2-product-menu" style="display:none">
+              <div class="v2-dropdown-item" style="color:#9CA3AF" onclick="v2PickField(event,'v2-product-val','v2-product-wrap','')">— Empty —</div>
               <div class="v2-dropdown-item" onclick="v2PickField(event,'v2-product-val','v2-product-wrap','Quix')">Quix</div>
               <div class="v2-dropdown-item" onclick="v2PickField(event,'v2-product-val','v2-product-wrap','Snitch')">Snitch</div>
               <div class="v2-dropdown-item" onclick="v2PickField(event,'v2-product-val','v2-product-wrap','Catalog')">Catalog</div>
@@ -412,7 +417,7 @@
     </div></div>
 
     <!-- V2 S3 -->
-    <div class="step-card"><div class="step-header" onclick="toggle('v2',3)"><div><h3 class="step-title">Step 3: Unified Key Interactions</h3><p class="step-subtitle">Review and edit the unified key interactions before generating BI events.</p></div><div class="step-header-right"><span class="badge-regen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#116DFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Re-generate</span><div class="chevron-circle" id="v2-chev-3"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+    <div class="step-card"><div class="step-header" onclick="toggle('v2',3)"><div><h3 class="step-title">Step 3: Unified Key Interactions</h3><p class="step-subtitle">Review and edit the unified key interactions before generating BI events.</p></div><div class="step-header-right"><span class="badge-regen"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5L10.5 6L15 7.5L10.5 9L9 13.5L7.5 9L3 7.5L7.5 6L9 1.5Z" stroke="#116DFF" stroke-width="1.2" stroke-linejoin="round"/><path d="M13.5 11.25L14.25 13.5L15 11.25L17.25 10.5L15 9.75L14.25 7.5L13.5 9.75L11.25 10.5L13.5 11.25Z" stroke="#116DFF" stroke-width="0.8" stroke-linejoin="round"/></svg> Re-generate</span><div class="chevron-circle" id="v2-chev-3"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body" id="v2-body-3">
       <p class="ki-label">Key interactions</p>
       <div class="ki-row"><input class="ki-input" value="Filter Events: Click (Filter options)" readonly><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
@@ -425,13 +430,13 @@
     </div></div>
 
     <!-- V2 S4 -->
-    <div class="step-card"><div class="step-header" onclick="toggle('v2',4)"><div><h3 class="step-title">Step 4: Suggested BI Events</h3><p class="step-subtitle">Review the suggested BI events.</p></div><div class="step-header-right"><span class="badge-regen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#116DFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Re-generate</span><div class="chevron-circle" id="v2-chev-4"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+    <div class="step-card"><div class="step-header" onclick="toggle('v2',4)"><div><h3 class="step-title">Step 4: Suggested BI Events</h3><p class="step-subtitle">Review the suggested BI events.</p></div><div class="step-header-right"><span class="badge-regen"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5L10.5 6L15 7.5L10.5 9L9 13.5L7.5 9L3 7.5L7.5 6L9 1.5Z" stroke="#116DFF" stroke-width="1.2" stroke-linejoin="round"/><path d="M13.5 11.25L14.25 13.5L15 11.25L17.25 10.5L15 9.75L14.25 7.5L13.5 9.75L11.25 10.5L13.5 11.25Z" stroke="#116DFF" stroke-width="0.8" stroke-linejoin="round"/></svg> Re-generate</span><div class="chevron-circle" id="v2-chev-4"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body" id="v2-body-4">
       <p class="section-title">Existing events (1)</p>
       <div class="event-card-v2">
         <div class="related-bar"><span class="rlabel">Related Key interactions:</span><span class="related-tag">Create Event: Click (Button)</span><span class="related-tag">Manage View: Click (Toolbar)</span></div>
         <div class="event-divider"></div>
-        <div class="event-title-row"><div class="event-title-left"><div class="event-title-badge-row"><span class="event-id-badge">68:106</span><div class="event-title-divider"></div><span class="event-name-v2">add_event_click</span></div><p class="event-desc">Clicking the 'Add Event' or 'Create Event' button to open the event creation flow.</p></div><span class="three-dots">⋯</span></div>
+        <div class="event-title-row"><div class="event-title-left"><div class="event-title-badge-row"><span class="event-id-badge">179:106</span><div class="event-title-divider"></div><span class="event-name-v2">add_event_click</span></div><p class="event-desc">Clicking the 'Add Event' or 'Create Event' button to open the event creation flow.</p></div><span class="three-dots">⋯</span></div>
         <p class="event-usertype"><span class="ut-label">Src:</span> 179 - Data Platform</p>
         <p class="event-usertype"><span class="ut-label">User type:</span> users, anonymous</p>
         <p class="event-fields-label">Fields:</p>
@@ -443,7 +448,7 @@
       <div class="event-card-v2">
         <div class="related-bar"><span class="rlabel">Related Key interactions:</span><span class="related-tag">View Event Details: Click (Row)</span><span class="related-tag">Edit Event: Click (Edit icon)</span></div>
         <div class="event-divider"></div>
-        <div class="event-title-row"><div class="event-title-left"><div class="event-title-badge-row"><span class="event-id-badge-new">68:107</span><div class="event-title-divider"></div><span class="event-name-v2">event_details_view</span></div><p class="event-desc">Opening the event details panel to view or edit a specific event's configuration.</p></div><span class="three-dots">⋯</span></div>
+        <div class="event-title-row"><div class="event-title-left"><div class="event-title-badge-row"><span class="event-id-badge-new">179:107</span><div class="event-title-divider"></div><span class="event-name-v2">event_details_view</span></div><p class="event-desc">Opening the event details panel to view or edit a specific event's configuration.</p></div><span class="three-dots">⋯</span></div>
         <p class="event-usertype"><span class="ut-label">Src:</span> 179 - Data Platform</p>
         <p class="event-usertype"><span class="ut-label">User type:</span> users, anonymous</p>
         <p class="event-fields-label">Fields:</p>
@@ -466,7 +471,7 @@
         <div class="accordion-row-v2" style="border-bottom:none"><div class="arrow-down"></div><span style="font-weight:500">View Event Details</span><div class="vert-div"></div><span style="font-weight:500">event_details_view</span><span class="badge-new">New event</span></div>
 
         <div class="accordion-expanded-v2">
-          <table class="v2-table-inner"><thead><tr><th>Input name</th><th>Target name</th><th>Type</th><th>Description</th><th>Value</th><th>Static value <span class="info-icon" style="font-size:8px">i</span></th></tr></thead><tbody>
+          <table class="v2-table-inner"><thead><tr><th>Input name</th><th>Target name</th><th>Type</th><th>Description</th><th>Value</th><th>Dynamic value <span class="info-icon" style="font-size:8px">i</span></th></tr></thead><tbody>
             <tr><td>draft_event</td><td>Event_hash</td><td>BOOL</td><td>{'false', 'true'}</td><td><textarea class="value-input-v2" rows="2">false</textarea></td><td><span class="dyn-checkbox-v2"></span></td></tr>
             <tr><td>tab_name</td><td>Action_name</td><td>STRING</td><td>{'my_events', 'settings_main'}</td><td><textarea class="value-input-v2" rows="2">my_events</textarea></td><td><span class="dyn-checkbox-v2"></span></td></tr>
             <tr><td>button_name</td><td>Action_name</td><td>STRING</td><td>{'add_event', 'view_details'}</td><td><textarea class="value-input-v2" rows="2">view_details</textarea></td><td><span class="dyn-checkbox-v2"></span></td></tr>
@@ -716,7 +721,7 @@
     function v2SelectOwner(e, value) {
       e.stopPropagation();
       var valEl = document.getElementById('v2-owner-val');
-      if (valEl) { valEl.textContent = value; valEl.classList.remove('v2-placeholder'); }
+      if (valEl) { valEl.textContent = value === '' ? '–' : value; valEl.classList.remove('v2-placeholder'); }
       v2CloseAllMenus();
       if (!_v2OwnerDone) {
         _v2OwnerDone = true;
@@ -757,7 +762,7 @@
     function v2PickField(e, valId, wrapId, value) {
       e.stopPropagation();
       var valEl = document.getElementById(valId);
-      if (valEl) { valEl.textContent = value; valEl.classList.remove('v2-placeholder'); }
+      if (valEl) { valEl.textContent = value === '' ? '–' : value; valEl.classList.remove('v2-placeholder'); }
       v2CloseAllMenus();
     }
 
@@ -766,42 +771,59 @@
     function handleV2Images(input) {
       var files = Array.from(input.files);
       if (!files.length) return;
-      window.v2Images = [];
       var container = document.getElementById('v2-images-container');
       if (!container) return;
+
+      // Show spinner inside the zone – zone stays at 278×218, no class/size change
       container.innerHTML = '';
-      // Switch upload zone to fixed-slot image-preview mode
-      var zone = document.querySelector('.v2-upload-zone');
-      if (zone) { zone.classList.add('has-images'); zone.onclick = null; }
-      // Row layout for slots
-      container.style.cssText = 'display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;width:auto;';
+      container.style.cssText = 'display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;width:100%;height:100%;';
+      var sp = document.createElement('div');
+      sp.className = 'v2-upload-spinner';
+      container.appendChild(sp);
+      var lt = document.createElement('span');
+      lt.style.cssText = 'font-size:12px;color:#868aa5;';
+      lt.textContent = 'Uploading\u2026';
+      container.appendChild(lt);
+
+      var loaded = 0;
+      var results = new Array(files.length);
+      window.v2Images = [];
+
       files.forEach(function(file, idx) {
-        var wrap = document.createElement('div');
-        wrap.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;';
-        container.appendChild(wrap);
         var reader = new FileReader();
         reader.onload = function(e) {
-          window.v2Images[idx] = { src: e.target.result, name: file.name };
-          var slot = document.createElement('div');
-          slot.className = 'v2-img-slot';
-          var img = document.createElement('img');
-          img.src = e.target.result;
-          img.alt = file.name;
-          slot.appendChild(img);
-          var nameEl = document.createElement('p');
-          nameEl.className = 'v2-img-name';
-          nameEl.textContent = file.name.replace(/\.[^.]+$/, '');
-          wrap.appendChild(slot);
-          wrap.appendChild(nameEl);
+          results[idx] = { src: e.target.result, name: file.name };
+          loaded++;
+          if (loaded !== files.length) return;
+          // All done – switch zone to image-slots mode
+          window.v2Images = results;
+          var zone = document.querySelector('.v2-upload-zone');
+          if (zone) { zone.classList.add('has-images'); zone.onclick = null; }
+          container.innerHTML = '';
+          container.style.cssText = 'display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;justify-content:flex-start;width:auto;';
+          results.forEach(function(r) {
+            var wrap = document.createElement('div');
+            wrap.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;';
+            var slot = document.createElement('div');
+            slot.className = 'v2-img-slot';
+            var img = document.createElement('img');
+            img.src = r.src; img.alt = r.name;
+            slot.appendChild(img);
+            var nameEl = document.createElement('p');
+            nameEl.className = 'v2-img-name';
+            nameEl.textContent = r.name.replace(/\.[^.]+$/, '');
+            wrap.appendChild(slot);
+            wrap.appendChild(nameEl);
+            container.appendChild(wrap);
+          });
+          var addSlot = document.createElement('div');
+          addSlot.className = 'v2-add-slot';
+          addSlot.innerHTML = '<div style="width:40px;height:40px;border-radius:50%;background:#d6e6fe;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><line x1="10" y1="4" x2="10" y2="16" stroke="#116DFF" stroke-width="1.8" stroke-linecap="round"/><line x1="4" y1="10" x2="16" y2="10" stroke="#116DFF" stroke-width="1.8" stroke-linecap="round"/></svg></div><span style="font-size:12px;color:#868aa5">Supported formats: .png, .jpg</span>';
+          addSlot.onclick = function(e) { e.stopPropagation(); document.getElementById('v2-file-input').click(); };
+          container.appendChild(addSlot);
         };
         reader.readAsDataURL(file);
       });
-      // Add the "add more" slot
-      var addSlot = document.createElement('div');
-      addSlot.className = 'v2-add-slot';
-      addSlot.innerHTML = '<div style="width:40px;height:40px;border-radius:50%;background:#d6e6fe;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><line x1="10" y1="4" x2="10" y2="16" stroke="#116DFF" stroke-width="1.8" stroke-linecap="round"/><line x1="4" y1="10" x2="16" y2="10" stroke="#116DFF" stroke-width="1.8" stroke-linecap="round"/></svg></div><span style="font-size:12px;color:#868aa5">Supported formats: .png, .jpg</span>';
-      addSlot.onclick = function(e) { e.stopPropagation(); document.getElementById('v2-file-input').click(); };
-      container.appendChild(addSlot);
       input.value = '';
     }
 
@@ -858,8 +880,9 @@
     // ─── Step 4 builder ───
     function buildV2Step4HTML() {
       var src = (window.v2State && window.v2State.src) ? window.v2State.src : '179 - Data Platform';
+      var srcNum = (src.match(/^\d+/) || ['179'])[0];
       var existingCard = _v2EventCard({
-        id: '68:106', name: 'add_event_click',
+        id: srcNum + ':106', name: 'add_event_click',
         desc: "Clicking the 'Add Event' or 'Create Event' button to open the event creation flow.",
         src: src, usertype: 'users, anonymous',
         relatedKis: ['Create Event: Click (Button)', 'Manage View: Click (Toolbar)'],
@@ -870,7 +893,7 @@
         ]
       });
       var newCard = _v2EventCard({
-        id: '68:107', name: 'event_details_view', isNew: true,
+        id: srcNum + ':107', name: 'event_details_view', isNew: true,
         desc: "Opening the event details panel to view or edit a specific event's configuration.",
         src: src, usertype: 'users, anonymous',
         relatedKis: ['View Event Details: Click (Row)', 'Edit Event: Click (Edit icon)'],
@@ -960,7 +983,7 @@
         '<div class="accordion-expanded-v2">' +
         '<table class="v2-table-inner"><thead><tr>' +
         '<th>Input name</th><th>Target name</th><th>Type</th><th>Description</th>' +
-        '<th>Value</th><th>Static value <span class="info-icon" style="font-size:8px">i</span></th>' +
+        '<th>Value</th><th>Dynamic value <span class="info-icon" style="font-size:8px">i</span></th>' +
         '</tr></thead><tbody>' + tableRows + '</tbody></table>' +
         '<p style="color:#116DFF;font-size:14px;font-weight:500;text-align:center;margin-top:12px;padding:12px 0">See more fields (3) &#x2193;</p>' +
         '</div>' +
