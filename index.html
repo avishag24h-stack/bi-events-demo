@@ -140,7 +140,9 @@
     .v2-table-inner th { text-align: left; padding: 12px 18px; font-weight: 400; font-size: 14px; color: #000624; background: #F6F7F9; border-top: 1px solid #DFE5EB; border-bottom: 1px solid #DFE5EB; }
     .v2-table-inner td { padding: 12px 18px; font-size: 14px; color: #333853; font-weight: 400; border-bottom: 1px solid #DFE5EB; vertical-align: top; background: white; }
     .value-textarea { padding: 6px 12px; border: 1px solid #D6E6FE; border-radius: 6px; font-size: 14px; color: #000624; min-height: 48px; width: 174px; font-family: inherit; line-height: 18px; background: white; display: block; word-wrap: break-word; white-space: normal; }
-    .dyn-checkbox-v2 { width: 16px; height: 16px; border: 1px solid #116DFF; border-radius: 4px; display: inline-block; background: white; }
+    .dyn-checkbox-v2 { width: 16px; height: 16px; border: 1px solid #116DFF; border-radius: 4px; display: block; margin: 0 auto; background: white; }
+    .v2-table-inner th:last-child { text-align: center; }
+    .v2-table-inner td:last-child { text-align: center; vertical-align: middle; }
     .value-input-v2 { padding: 6px 12px; border: 1px solid #D6E6FE; border-radius: 6px; font-size: 14px; color: #000624; width: 174px; font-family: inherit; line-height: 18px; background: white; display: block; resize: none; outline: none; }
     .value-input-v2:focus { border-color: #116DFF; }
 
@@ -217,7 +219,7 @@
     .v2-textarea::placeholder { color: #868aa5; }
     .v2-upload-zone { border: 2px dashed #a8caff; background: #f4f7ff; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 16px; width: 278px; height: 218px; cursor: pointer; transition: background 0.2s ease; }
     .v2-upload-zone:hover { background: #eaf1ff; }
-    .v2-upload-zone.has-images { width: auto; height: auto; border: none; background: none; padding: 0; flex-direction: row; cursor: default; justify-content: flex-start; align-items: flex-start; }
+    .v2-upload-zone.has-images { width: auto; height: auto; min-height: 218px; border: none; background: none; padding: 0; flex-direction: row; cursor: default; justify-content: flex-start; align-items: flex-start; }
     .v2-img-slot { width: 278px; height: 218px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
     .v2-img-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .v2-img-name { font-size: 11px; color: #6B7280; margin-top: 6px; max-width: 278px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -420,12 +422,12 @@
     <div class="step-card"><div class="step-header" onclick="toggle('v2',3)"><div><h3 class="step-title">Step 3: Unified Key Interactions</h3><p class="step-subtitle">Review and edit the unified key interactions before generating BI events.</p></div><div class="step-header-right"><span class="badge-regen"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5L10.5 6L15 7.5L10.5 9L9 13.5L7.5 9L3 7.5L7.5 6L9 1.5Z" stroke="#116DFF" stroke-width="1.2" stroke-linejoin="round"/><path d="M13.5 11.25L14.25 13.5L15 11.25L17.25 10.5L15 9.75L14.25 7.5L13.5 9.75L11.25 10.5L13.5 11.25Z" stroke="#116DFF" stroke-width="0.8" stroke-linejoin="round"/></svg> Re-generate</span><div class="chevron-circle" id="v2-chev-3"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body" id="v2-body-3">
       <p class="ki-label">Key interactions</p>
-      <div class="ki-row"><input class="ki-input" value="Filter Events: Click (Filter options)" readonly><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
-      <div class="ki-row"><input class="ki-input" value="Manage View: Click (Toolbar)" readonly><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
-      <div class="ki-row"><input class="ki-input" value="Create Event: Click (Button)" readonly><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
-      <div class="ki-row"><input class="ki-input" value="Edit Event: Click (Edit icon)" readonly><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
-      <div class="ki-row"><input class="ki-input" value="View Event Details: Click (Row)" readonly><div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
-      <p class="add-key">+ Add Key</p>
+      <div class="ki-row"><input class="ki-input" value="Filter Events: Click (Filter options)"><div class="ki-delete-btn" onclick="deleteV2KiRow(this)" style="cursor:pointer"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="ki-row"><input class="ki-input" value="Manage View: Click (Toolbar)"><div class="ki-delete-btn" onclick="deleteV2KiRow(this)" style="cursor:pointer"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="ki-row"><input class="ki-input" value="Create Event: Click (Button)"><div class="ki-delete-btn" onclick="deleteV2KiRow(this)" style="cursor:pointer"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="ki-row"><input class="ki-input" value="Edit Event: Click (Edit icon)"><div class="ki-delete-btn" onclick="deleteV2KiRow(this)" style="cursor:pointer"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="ki-row"><input class="ki-input" value="View Event Details: Click (Row)"><div class="ki-delete-btn" onclick="deleteV2KiRow(this)" style="cursor:pointer"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <p class="add-key" onclick="addV2KiRow(this)" style="cursor:pointer">+ Add Key</p>
       <div class="btn-row" style="margin-top:60px"><button class="btn-blue clickable" onclick="stepAction('v2',4)">Generate BI events</button></div>
     </div></div>
 
@@ -437,7 +439,6 @@
         <div class="related-bar"><span class="rlabel">Related Key interactions:</span><span class="related-tag">Create Event: Click (Button)</span><span class="related-tag">Manage View: Click (Toolbar)</span></div>
         <div class="event-divider"></div>
         <div class="event-title-row"><div class="event-title-left"><div class="event-title-badge-row"><span class="event-id-badge">179:106</span><div class="event-title-divider"></div><span class="event-name-v2">add_event_click</span></div><p class="event-desc">Clicking the 'Add Event' or 'Create Event' button to open the event creation flow.</p></div><span class="three-dots">⋯</span></div>
-        <p class="event-usertype"><span class="ut-label">Src:</span> 179 - Data Platform</p>
         <p class="event-usertype"><span class="ut-label">User type:</span> users, anonymous</p>
         <p class="event-fields-label">Fields:</p>
         <table class="v2-table"><thead><tr><th>Input name</th><th>Target name</th><th>Type</th><th>Description</th><th>Added date</th><th>Mandatory</th></tr></thead><tbody><tr><td>draft_event</td><td>Event_hash</td><td>BOOL</td><td>{'false'}</td><td>N/A</td><td>No</td></tr><tr><td>tab_name</td><td>Action_name</td><td>STRING</td><td>{'my_events', 'settings_m..</td><td>N/A</td><td>No</td></tr><tr><td>button_name</td><td>Action_name</td><td>STRING</td><td>{'add_event', 'create_eve..</td><td>N/A</td><td>No</td></tr></tbody></table>
@@ -449,7 +450,6 @@
         <div class="related-bar"><span class="rlabel">Related Key interactions:</span><span class="related-tag">View Event Details: Click (Row)</span><span class="related-tag">Edit Event: Click (Edit icon)</span></div>
         <div class="event-divider"></div>
         <div class="event-title-row"><div class="event-title-left"><div class="event-title-badge-row"><span class="event-id-badge-new">179:107</span><div class="event-title-divider"></div><span class="event-name-v2">event_details_view</span></div><p class="event-desc">Opening the event details panel to view or edit a specific event's configuration.</p></div><span class="three-dots">⋯</span></div>
-        <p class="event-usertype"><span class="ut-label">Src:</span> 179 - Data Platform</p>
         <p class="event-usertype"><span class="ut-label">User type:</span> users, anonymous</p>
         <p class="event-fields-label">Fields:</p>
         <table class="v2-table"><thead><tr><th>Input name</th><th>Target name</th><th>Type</th><th>Description</th><th>Added date</th><th>Mandatory</th></tr></thead><tbody><tr><td>event_id</td><td>Event_id</td><td>STRING</td><td>Unique event identifier</td><td>N/A</td><td>No</td></tr><tr><td>view_type</td><td>Action_name</td><td>STRING</td><td>{'details', 'edit'}</td><td>N/A</td><td>No</td></tr><tr><td>source_tab</td><td>Action_name</td><td>STRING</td><td>{'my_events', 'all_events'}</td><td>N/A</td><td>No</td></tr></tbody></table>
@@ -838,7 +838,22 @@
       return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    var _kiDelBtn = '<div class="ki-delete-btn"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+    function deleteV2KiRow(btn) {
+      var row = btn.closest('.ki-row');
+      if (row) row.remove();
+    }
+
+    function addV2KiRow(el) {
+      var delSvg = '<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      var row = document.createElement('div');
+      row.className = 'ki-row';
+      row.innerHTML = '<input class="ki-input" value="" placeholder="Key interaction...">' +
+        '<div class="ki-delete-btn" onclick="deleteV2KiRow(this)" style="cursor:pointer">' + delSvg + '</div>';
+      el.parentNode.insertBefore(row, el);
+      row.querySelector('.ki-input').focus();
+    }
+
+    var _kiDelBtn = '<div class="ki-delete-btn" onclick="deleteV2KiRow(this)" style="cursor:pointer"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
 
     function _kiRow(text) {
       return '<div class="ki-row"><input class="ki-input" value="' + _esc(text) + '" readonly>' + _kiDelBtn + '</div>';
@@ -881,11 +896,19 @@
     function buildV2Step4HTML() {
       var src = (window.v2State && window.v2State.src) ? window.v2State.src : '179 - Data Platform';
       var srcNum = (src.match(/^\d+/) || ['179'])[0];
+
+      // Read live KIs from step 3 DOM
+      var kiEls = document.querySelectorAll('#v2-body-3 .ki-input');
+      var allKIs = Array.from(kiEls).map(function(el) { return el.value.trim(); }).filter(Boolean);
+      var half = Math.ceil(allKIs.length / 2);
+      var existingKIs = allKIs.length > 0 ? allKIs.slice(0, half) : ['Create Event: Click (Button)', 'Manage View: Click (Toolbar)'];
+      var newKIs = allKIs.length > 1 ? allKIs.slice(half) : ['View Event Details: Click (Row)', 'Edit Event: Click (Edit icon)'];
+
       var existingCard = _v2EventCard({
         id: srcNum + ':106', name: 'add_event_click',
         desc: "Clicking the 'Add Event' or 'Create Event' button to open the event creation flow.",
         src: src, usertype: 'users, anonymous',
-        relatedKis: ['Create Event: Click (Button)', 'Manage View: Click (Toolbar)'],
+        relatedKis: existingKIs,
         fields: [
           { input: 'draft_event', target: 'Event_hash', type: 'BOOL', desc: "{'false'}" },
           { input: 'tab_name', target: 'Action_name', type: 'STRING', desc: "{'my_events', 'settings_m.." },
@@ -896,7 +919,7 @@
         id: srcNum + ':107', name: 'event_details_view', isNew: true,
         desc: "Opening the event details panel to view or edit a specific event's configuration.",
         src: src, usertype: 'users, anonymous',
-        relatedKis: ['View Event Details: Click (Row)', 'Edit Event: Click (Edit icon)'],
+        relatedKis: newKIs,
         fields: [
           { input: 'event_id', target: 'Event_id', type: 'STRING', desc: "Unique event identifier" },
           { input: 'view_type', target: 'Action_name', type: 'STRING', desc: "{'details', 'edit'}" },
@@ -922,7 +945,6 @@
         '<div class="event-title-row"><div class="event-title-left">' +
         '<div class="event-title-badge-row"><span class="' + (ev.isNew ? 'event-id-badge-new' : 'event-id-badge') + '">' + _esc(ev.id) + '</span><div class="event-title-divider"></div><span class="event-name-v2">' + _esc(ev.name) + '</span></div>' +
         '<p class="event-desc">' + _esc(ev.desc) + '</p></div><span class="three-dots">&#8943;</span></div>' +
-        '<p class="event-usertype"><span class="ut-label">Src:</span> ' + _esc(ev.src) + '</p>' +
         '<p class="event-usertype"><span class="ut-label">User type:</span> ' + _esc(ev.usertype) + '</p>' +
         '<p class="event-fields-label">Fields:</p>' +
         '<table class="v2-table"><thead><tr><th>Input name</th><th>Target name</th><th>Type</th><th>Description</th><th>Added date</th><th>Mandatory</th></tr></thead>' +
