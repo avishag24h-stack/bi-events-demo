@@ -198,6 +198,7 @@
     .upload-area { margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:20px; }
     .step-note { position:absolute;top:78px;right:20px;width:210px;background:#FFFBEB;border-left:3px solid #F59E0B;border-radius:8px;padding:10px 14px;font-size:12px;color:#78350F;line-height:1.6;z-index:20;box-shadow:0 6px 24px rgba(0,0,0,0.13);opacity:0;pointer-events:none;transition:opacity 0.35s ease; }
     .step-note.visible { opacity:1;pointer-events:auto; }
+    .step-note-inline { position:static;width:100%;box-sizing:border-box;margin-top:16px;box-shadow:none; }
     .event-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
     .event-table th { text-align: left; padding: 10px 12px; font-weight: 600; font-size: 12px; color: #6B7280; border-bottom: 1px solid #E5E7EB; background: #F9FAFB; }
     .event-table td { padding: 10px 12px; font-size: 13px; color: #374151; border-bottom: 1px solid #F3F4F6; }
@@ -315,7 +316,6 @@
 
     <!-- V2 S1 -->
     <div style="position:relative;">
-    <div id="v2-note-1" class="step-note visible">User uploads a screenshot and selects the relevant context for the BI events. Inputs are now connected to the BI catalog structure and data groups, so the owner's relevant domain and products are automatically recognized. We also planned to provide an option to work with a Figma link.</div>
     <div class="step-card"><div class="step-header" onclick="toggle('v2',1)"><div><h3 class="step-title">Step 1: Context & Screenshots</h3><p class="step-subtitle">Provide business context and upload screenshots.</p></div><div class="step-header-right"><div class="chevron-circle open" id="v2-chev-1"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body open" id="v2-body-1">
       <p style="font-size:14px;font-weight:700;color:#000624;margin-bottom:18px">Business context</p>
@@ -390,12 +390,12 @@
           </div>
         </div>
       </div>
+      <div id="v2-note-1" class="step-note step-note-inline visible">Users upload a screenshot and select the relevant context for the BI events. Inputs are connected to the BI catalog structure and data groups, allowing domain, product, and ownership to be automatically recognized. We also planned to support working with a Figma link to pull visuals directly.</div>
       <div class="btn-row"><button class="v2-analyze-btn" onclick="stepAction('v2',2)">Analyze Key Interactions</button></div>
     </div></div></div>
 
     <!-- V2 S2 -->
     <div style="position:relative;">
-    <div id="v2-note-2" class="step-note">AI detects key interactions (trigger points). Business questions were removed based on analyst feedback. The image was still reported as too small. We also added actions to add or remove irrelevant interactions.</div>
     <div class="step-card"><div class="step-header" onclick="toggle('v2',2)"><div><h3 class="step-title">Step 2: Key interactions</h3><p class="step-subtitle">Review and refine AI-generated key interactions.</p></div><div class="step-header-right"><div class="chevron-circle" id="v2-chev-2"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body" id="v2-body-2">
       <div class="v2-screen-card">
@@ -420,12 +420,12 @@
           <p class="add-key">+ Add Key</p>
         </div>
       </div>
+      <div id="v2-note-2" class="step-note step-note-inline">AI detects key interactions (trigger points). Based on analyst feedback, business-related questions were removed. The screenshot was still perceived as too small. In addition, we introduced the ability to add or remove irrelevant interactions.</div>
       <div class="btn-row"><button class="btn-blue clickable" onclick="stepAction('v2',3)">Unify Key Interactions</button></div>
     </div></div></div>
 
     <!-- V2 S3 -->
     <div style="position:relative;">
-    <div id="v2-note-3" class="step-note">We kept the unified key interactions step due to AI pipeline needs, but feedback indicated it felt unclear and repetitive. Clear add and remove actions were also added here.</div>
     <div class="step-card"><div class="step-header" onclick="toggle('v2',3)"><div><h3 class="step-title">Step 3: Unified Key Interactions</h3><p class="step-subtitle">Review and edit the unified key interactions before generating BI events.</p></div><div class="step-header-right"><span class="badge-regen"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5L10.5 6L15 7.5L10.5 9L9 13.5L7.5 9L3 7.5L7.5 6L9 1.5Z" stroke="#116DFF" stroke-width="1.2" stroke-linejoin="round"/><path d="M13.5 11.25L14.25 13.5L15 11.25L17.25 10.5L15 9.75L14.25 7.5L13.5 9.75L11.25 10.5L13.5 11.25Z" stroke="#116DFF" stroke-width="0.8" stroke-linejoin="round"/></svg> Re-generate</span><div class="chevron-circle" id="v2-chev-3"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body" id="v2-body-3">
       <p class="ki-label">Key interactions</p>
@@ -435,12 +435,13 @@
       <div class="ki-row"><input class="ki-input" value="Edit Event: Click (Edit icon)"><div class="ki-delete-btn" onclick="deleteV2KiRow(this)" style="cursor:pointer"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
       <div class="ki-row"><input class="ki-input" value="View Event Details: Click (Row)"><div class="ki-delete-btn" onclick="deleteV2KiRow(this)" style="cursor:pointer"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.75 5.25H14.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round"/><path d="M4.5 5.25L5.25 14.25C5.25 14.66 5.41 15.06 5.71 15.36C6 15.65 6.4 15.82 6.82 15.82H11.18C11.6 15.82 12 15.65 12.29 15.36C12.59 15.06 12.75 14.66 12.75 14.25L13.5 5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.75 5.25V3C6.75 2.8 6.83 2.61 6.97 2.47C7.11 2.33 7.3 2.25 7.5 2.25H10.5C10.7 2.25 10.89 2.33 11.03 2.47C11.17 2.61 11.25 2.8 11.25 3V5.25" stroke="#3899EC" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
       <p class="add-key" onclick="addV2KiRow(this)" style="cursor:pointer">+ Add Key</p>
+      <div id="v2-note-3" class="step-note step-note-inline">We kept the unified key interactions step due to AI pipeline requirements, as it aggregates interactions identified in the previous step. However, user feedback indicated it felt unclear and repetitive. We also added an option to add and remove actions.</div>
       <div class="btn-row" style="margin-top:60px"><button class="btn-blue clickable" onclick="stepAction('v2',4)">Generate BI events</button></div>
     </div></div></div>
 
     <!-- V2 S4 -->
     <div style="position:relative;">
-    <div id="v2-note-4" class="step-note">The event card layout was redesigned to feel more familiar to analysts. Existing events already exist in the BI catalog and can be re-used if they fit. New events are AI-suggested based on the catalog structure. Due to timing constraints, users still couldn't edit suggested events, which caused frustration.</div>
+    <div id="v2-note-4" class="step-note">The event card layout was redesigned to feel more familiar to analysts. Existing events already exist in the BI catalog and can be reused if they fit. New events are AI-suggested based on the catalog structure. Due to time constraints, we did not include editing capabilities for suggested events, which led to user frustration.</div>
     <div class="step-card"><div class="step-header" onclick="toggle('v2',4)"><div><h3 class="step-title">Step 4: Suggested BI Events</h3><p class="step-subtitle">Review the suggested BI events.</p></div><div class="step-header-right"><span class="badge-regen"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5L10.5 6L15 7.5L10.5 9L9 13.5L7.5 9L3 7.5L7.5 6L9 1.5Z" stroke="#116DFF" stroke-width="1.2" stroke-linejoin="round"/><path d="M13.5 11.25L14.25 13.5L15 11.25L17.25 10.5L15 9.75L14.25 7.5L13.5 9.75L11.25 10.5L13.5 11.25Z" stroke="#116DFF" stroke-width="0.8" stroke-linejoin="round"/></svg> Re-generate</span><div class="chevron-circle" id="v2-chev-4"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body" id="v2-body-4">
       <p class="section-title">Existing events (1)</p>
@@ -469,7 +470,7 @@
 
     <!-- V2 S5 -->
     <div style="position:relative;">
-    <div id="v2-note-5" class="step-note">Eventor analyzes the screenshot and flow to generate a mapping plan, automatically populating field values for new events. We recognized the need for clients to select whether an event is dynamic — this wasn't clear to users. Once confirmed, the flow locks and new events are placed in the catalog as drafts.</div>
+    <div id="v2-note-5" class="step-note">Eventor analyzes the screenshot and flow to generate a mapping plan and pre-fill values for new events. Users can define whether values are dynamic — a requirement that wasn't clear based on user feedback. Once confirmed, the flow is locked and new events are added to the catalog as drafts.</div>
     <div class="step-card"><div class="step-header" onclick="toggle('v2',5)"><div><h3 class="step-title">Step 5: Review BI events and their values per screenshot</h3><p class="step-subtitle">Review and confirm BI events value per screenshot. The events you approve here will be added to the catalog as drafts.</p></div><div class="step-header-right"><div class="chevron-circle" id="v2-chev-5"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
     <div class="step-body" id="v2-body-5">
       <div class="screenshot-container-v2">
